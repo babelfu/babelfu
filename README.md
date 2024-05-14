@@ -80,3 +80,11 @@ On permissions:
 - Pull requests - Read & write
 
 Once the GitHub App is created, you will need to expose on `Babel.config` the following data: `app_id`, `client_id`, `client_secret` and the `private_key`
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Code of Conduct
+
+Everyone interacting in the Flatito project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ceritium/flatito/blob/master/CODE_OF_CONDUCT.md).
