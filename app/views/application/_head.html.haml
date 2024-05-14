@@ -1,0 +1,11 @@
+%head
+  %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
+  %meta{name: "turbo-cache-control", content: "no-cache"}
+  %title Babelfu
+  = csrf_meta_tags
+  = csp_meta_tag
+  = vite_client_tag
+  = vite_javascript_tag 'application'
+  = vite_stylesheet_tag 'bootstrap.scss'
+  = vite_stylesheet_tag 'application.scss'

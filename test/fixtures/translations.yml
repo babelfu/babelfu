@@ -1,0 +1,45 @@
+# == Schema Information
+#
+# Table name: translations
+#
+#  id          :bigint           not null, primary key
+#  branch_name :string
+#  branch_ref  :string
+#  file_path   :string
+#  key         :string
+#  locale      :string
+#  value       :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  project_id  :bigint           not null
+#
+# Indexes
+#
+#  index_translations_on_project_id  (project_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
+#
+
+en_hello:
+  project: one
+  locale: en
+  key: "hello"
+  value: "Hello"
+  branch_name: "master"
+  file_path: "config/locales/en.yml"
+en_bye:
+  project: one
+  locale: en
+  key: "bye"
+  value: "Bye"
+  branch_name: "master"
+  file_path: "config/locales/en.yml"
+es_hello:
+  project: one
+  locale: es
+  key: "hello"
+  value: "Hola"
+  branch_name: "master"
+  file_path: "config/locales/es.yml"

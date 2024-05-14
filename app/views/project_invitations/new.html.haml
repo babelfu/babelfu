@@ -1,0 +1,17 @@
+.d-flex.justify-content-between.align-items-center
+  %nav{"aria-label" => "breadcrumb"}
+    %ol.breadcrumb
+      %li.breadcrumb-item
+        = link_to "Projects", projects_path
+      %li.breadcrumb-item
+        = link_to @project.name, project_path(@project)
+      %li.breadcrumb-item
+        = link_to "Members", project_members_path(@project)
+      %li.breadcrumb-item
+        = link_to "Invitations", project_invitations_path(@project)
+      %li.breadcrumb-item.active{"aria-current" => "page"} New Invitation
+
+
+= simple_form_for @invitation do |f|
+  = f.input :email, label: 'Email address'
+  = f.button :submit, class: 'btn btn-primary'

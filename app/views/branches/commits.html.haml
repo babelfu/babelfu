@@ -1,0 +1,13 @@
+.d-flex.justify-content-between.mb-3.align-items-start
+  .div
+    %nav{"aria-label" => "breadcrumb"}
+      %ol.breadcrumb
+        %li.breadcrumb-item
+          = link_to "Projects", projects_path
+        %li.breadcrumb-item
+          = link_to @project.name, project_path(@project)
+        %li.breadcrumb-item{"aria-current" => "page"}
+          = link_to @branch.name, project_branch_path(@project, @branch)
+        %li.breadcrumb-item.active{"aria-current" => "page"} Commit changes
+
+= render CommitsComponent.new(presenter: @commits_presenter, create_commit_path: commit_create_project_branch_path(@project, @branch))

@@ -1,0 +1,34 @@
+.d-flex.justify-content-between.align-items-center.mb-4
+  %nav{"aria-label" => "breadcrumb"}
+    %ol.breadcrumb
+      %li.breadcrumb-item
+        = link_to "Projects", projects_path
+      %li.breadcrumb-item
+        = link_to @project.name, project_path(@project)
+      %li.breadcrumb-item
+        = link_to "Members", project_members_path(@project)
+      %li.breadcrumb-item.active{"aria-current" => "page"} Invitations
+
+  .links
+    = link_to "New invitation", new_project_invitation_path(@project), class: 'btn btn-primary'
+
+- if @invitations.any?
+  %table.table.table-hover
+    %thead
+      %tr
+        %th Email
+        %th Invited at
+        %th Status
+        %th Actions
+    %tbody
+      - @invitations.each do |invitation|
+        %tr
+          %td= invitation.email
+          %td= invitation.created_at
+          %td= invitation.status
+          %td= button_to "delete", project_invitation_path(@project, invitation), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'
+- else
+  %p.lead
+    No invitations have been sent yet.
+    %br
+    = link_to 'Invite someone', new_project_invitation_path(@project), class: 'btn btn-primary btn-lg'

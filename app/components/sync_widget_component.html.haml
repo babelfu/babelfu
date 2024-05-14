@@ -1,0 +1,7 @@
+.d-flex.flex-column.align-items-end
+  - if object.sync_status != 'in_progress'
+    = button_to title, sync_path, method: :post, class: 'btn btn-primary', "data-bs-toggle": "tooltip", "data-bs-title": tooltip_text, "data-bs-placement": "left"
+  - else
+    %button.btn.btn-primary{disabled: true}
+      %span.spinner-border.spinner-border-sm{"aria-hidden": true}
+      %span{role: "status"} Sync in progress

@@ -1,0 +1,35 @@
+# == Schema Information
+#
+# Table name: proposals
+#
+#  id          :bigint           not null, primary key
+#  branch_name :string
+#  key         :string
+#  locale      :string
+#  value       :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  project_id  :bigint           not null
+#
+# Indexes
+#
+#  index_proposals_on_project_id  (project_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
+#
+
+es_hello:
+  project: one
+  locale: es
+  branch_name: master
+  key: hello
+  value: "Hola mundo"
+
+es_bye:
+  project: one
+  locale: es
+  branch_name: master
+  key: bye
+  value: "Adios mundo"

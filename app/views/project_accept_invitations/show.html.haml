@@ -1,0 +1,10 @@
+%h1 Join to the project #{@project.name}
+
+- if current_user
+  You are logged as #{current_user.email}
+  \#{button_to "Join", join_project_accept_invitations_path(@project, token: @invitation.token), method: :post, class: "btn btn-info"}
+- else
+  = link_to "Login", new_user_session_path
+  or
+  \#{link_to "signup", new_user_registration_path}
+  to join to the team.

@@ -1,0 +1,7 @@
+- if flash.any?
+  .container
+    - flash.each do |kind, message|
+      .alert.alert-dismissible.fade.show.mb-2{role: "alert", class: "alert-#{map_bootstrap(kind)}"}
+        %button.btn-close{type: "button", 'data-bs-dismiss': "alert", 'aria-label': "Close"}
+        = message
+    - flash.discard

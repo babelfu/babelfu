@@ -1,0 +1,10 @@
+!!!
+%html.h-100
+  = render 'application/head'
+  %body.d-flex.flex-column.h-100
+    = render 'application/header'
+    %main.flex-shrink-0.mb-5
+      = render 'application/flash'
+      .container.mt-4
+        = yield
+    = render 'application/footer'

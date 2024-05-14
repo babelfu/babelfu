@@ -1,0 +1,6 @@
+Invitation to babelfu.com
+=========================
+
+You are invited to join to the project <%= @project.name %> at babelfu.com.
+
+Follow this link to join the project: <%= project_accept_invitations_url(@project, token: @invitation.token) %>

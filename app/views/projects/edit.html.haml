@@ -1,0 +1,7 @@
+%h2 Edit project
+
+= simple_form_for @project do |f|
+  = f.input :name
+  = f.input :default_locale
+  = f.input :translations_path, hint: "Path to the translations files", placeholder: "config/locales"
+  = f.button :submit, class: "btn btn-primary"

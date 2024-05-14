@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                   :bigint           not null, primary key
+#  default_branch_name  :string
+#  default_locale       :string
+#  name                 :string
+#  sync_status          :string           default("not_synced")
+#  synced_at            :datetime
+#  translations_path    :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  installation_id      :string
+#  remote_repository_id :string
+#
+
+one:
+  name: Project1
+  default_locale: en
+  default_branch_name: master
+  remote_repository_id: "babelfu/demo"
+  translations_path: "config/locales"

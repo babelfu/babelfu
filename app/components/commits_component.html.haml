@@ -1,0 +1,30 @@
+.mb-5
+  - if presenter.commit_task_in_progress
+    %p.lead
+      There is a commit task in progress. Please wait until it is finished.
+  - else
+    - if presenter.commit_task.commit_proposals.proposals.with_changes.exists?
+      %h2.mb-3 Changes to commit
+      %table.table.table-hover
+        %thead
+          %tr
+            %th Locale
+            %th Key
+            %th Value
+        %tbody
+          - presenter.commit_task.commit_proposals.proposals.with_changes.each do |proposal|
+            %tr
+              %td= proposal.locale
+              %td= proposal.key
+              %td= proposal.value
+
+      = button_to 'Commit changes', create_commit_path, method: :post, class: 'btn btn-primary'
+    - else
+      %p.lead No changes to commit.
+
+%h2.mb-3 Previous commits
+%ul
+  - presenter.commited_tasks.each do |commit_task|
+    %li
+      = link_to commit_task.ref, commit_task.url, class: 'font-monospace', target: '_blank'
+      = "- #{time_ago_in_words(commit_task.commited_at)} ago"

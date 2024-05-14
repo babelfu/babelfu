@@ -1,0 +1,15 @@
+%h1 Projects
+
+= link_to 'New Project', new_project_path
+
+%table.table
+  %tbody
+    - @projects.each do |project|
+      %tr
+        %td= project.id
+        %td= link_to project.remote_repository_id, project_path(project)
+        %td
+          = link_to "edit", edit_project_path(project)
+          = link_to "delete", project, "data-turbo-method": "delete", "data-turbo-confirm": "Are you sure?"
+
+= paginate @projects, theme: 'bootstrap-5'

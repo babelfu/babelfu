@@ -1,0 +1,12 @@
+%h1 Connections
+
+- if current_user.github_access_token.present?
+  %h2 Github
+  - if current_user&.metadata&.github_user&.present?
+    %p
+      Connected as
+      = link_to current_user.metadata.github_user['login'], current_user.metadata.github_user['html_url'], target: '_blank'
+      %br
+      = button_to "Disconnect", disconnect_github_connections_path, method: :delete, class: 'btn btn-danger mt-2'
+- else
+  = link_to "Connect to Github", GithubAppClient.url
