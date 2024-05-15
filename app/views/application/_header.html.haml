@@ -1,7 +1,8 @@
 %header
   %nav.navbar.navbar-expand-lg.navbar-light.bg-light
     .container
-      %a.d-flex.align-items-center.navbar-brand{href: root_path}
+      %a.py-0.d-flex.align-items-center.navbar-brand{href: root_path}
+        = image_tag "logo.svg", alt: "Babelfu", height: 50
         Babelfu
       - if current_user
         %ul.nav.navbar-nav.me-auto.mb-md-0.flex-row
