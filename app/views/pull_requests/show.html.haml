@@ -15,34 +15,4 @@
     = link_to "Commit", commits_project_pull_request_path(@project, @pull_request), class: 'btn btn-primary me-2'
     = render SyncPullRequestWidgetComponent.new(@pull_request)
 
-= form_with url: project_pull_request_path(@project, @pull_request), method: :get do |f|
-  .d-flex.justify-content-between
-    %div.flex-fill.pe-2
-      .input-group
-        = f.text_field :filter_key, placeholder: 'Search', value: params[:filter_key], class: 'form-control form-control-lg'
-        - if params[:filter_key].present?
-          = link_to 'Clear', project_pull_request_path(@project, @pull_request, params.to_unsafe_h.merge(filter_key: nil)), class: 'btn btn-outline-secondary btn-lg'
-    %div.px-2
-      .form-check.form-switch
-        = label_tag :with_proposals, "With proposals", class: 'form-check-label'
-        = check_box_tag :with_proposals, 'yes', params[:with_proposals], class: 'form-check-input', autocomplete: false
-      .form-check.form-switch
-        = label_tag :with_changes
-        = check_box_tag :with_changes, 'yes', params[:with_changes], class: 'form-check-input', autocomplete: false
-    %div.px-2
-      %div{data: {controller: "locales", "available-locales": @translations_presenter.available_locales.to_json, "selected-locales": @translations_presenter.selected_locales.to_json}}
-      %small.d-block.text-muted.text-truncate{style: "max-width: 100px;"}
-        - if params[:filter_locales].present?
-          = params[:filter_locales].join(', ')
-        - else
-          All locales
-    %div.px-2
-      = f.submit 'Search', class: 'btn btn-primary btn-lg'
-
-  .row
-    .col-md-12
-      .mt-2
-        = paginate @translations_presenter.pagination, theme: 'bootstrap-5'
-
-      %div{data: {controller: "translations", "branch-name" => @translations_presenter.branch_name, "locales" => @translations_presenter.locales, "keys" => @translations_presenter.keys, "matrix" => @translations_presenter.matrix.to_json, "proposals-path" => project_proposals_path(@project)}}
-      = paginate @translations_presenter.pagination, theme: 'bootstrap-5'
+= render PullRequestTranslationsComponent.new(@pull_request, @translations_presenter)
