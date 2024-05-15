@@ -10,7 +10,9 @@
             = link_to "Projects", projects_path, class: "nav-link px-2 text-secondary"
           %li
             = link_to "Connections", connections_path, class: "nav-link px-2 text-secondary"
-
+      %button.navbar-toggler{type: "button", 'data-bs-toggle': "collapse", 'data-bs-target': "#navbarNav", 'aria-controls': "navbarNav", 'aria-expanded': "false", 'aria-label': "Toggle navigation"}
+        %span.navbar-toggler-icon
+      #navbarNav.collapse.navbar-collapse
         %ul.navbar-nav.ms-auto.mb-2.mb-l-0
           - if current_user
             %li.nav-item.dropdown
