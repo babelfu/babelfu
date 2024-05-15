@@ -12,6 +12,8 @@
   .actions.d-flex.flex-row.align-items-end
     .me-5= render GithubLinkComponent.new(@branch.url)
     = link_to "Commit", commits_project_branch_path(@project, @branch), class: 'btn btn-primary me-2'
-    = render SyncBranchWidgetComponent.new(@branch)
+
+    %div{id: dom_id(@branch)}
+      = render SyncBranchWidgetComponent.new(@branch)
 
 = render BranchTranslationsComponent.new(@branch, @translations_presenter)

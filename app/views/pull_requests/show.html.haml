@@ -13,6 +13,7 @@
   .actions.d-flex.flex-row.align-items-end
     .me-5= render GithubLinkComponent.new(@pull_request.url)
     = link_to "Commit", commits_project_pull_request_path(@project, @pull_request), class: 'btn btn-primary me-2'
-    = render SyncPullRequestWidgetComponent.new(@pull_request)
+    %div{id: dom_id(@pull_request)}
+      = render SyncPullRequestWidgetComponent.new(@pull_request)
 
 = render PullRequestTranslationsComponent.new(@pull_request, @translations_presenter)

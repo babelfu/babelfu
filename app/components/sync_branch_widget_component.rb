@@ -1,22 +1,10 @@
 # frozen_string_literal: true
 
 class SyncBranchWidgetComponent < SyncWidgetComponent
-  attr_reader :branch
-
-  def initialize(branch)
-    @branch = branch
-  end
-
-  def project
-    @branch.project
-  end
-
-  def object
-    branch
-  end
+  delegate :project, to: :object
 
   def sync_path
-    sync_project_branch_path(project, branch)
+    sync_project_branch_path(project, object)
   end
 
   def title
