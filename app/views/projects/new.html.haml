@@ -1,4 +1,10 @@
-%h1 New project
+.d-flex.justify-content-between.align-items-center
+  %nav{"aria-label" => "breadcrumb"}
+    %ol.breadcrumb
+      %li.breadcrumb-item
+        = link_to "Projects", projects_path
+      %li.breadcrumb-item.active{"aria-current": "page"}
+        New Project
 
 .row
   .col-md-6.col-md-offset-3

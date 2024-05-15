@@ -1,8 +1,14 @@
-%h1 Projects
-
-= link_to 'New Project', new_project_path
+.d-flex.justify-content-between.align-items-center
+  %h1 Projects
+  .actions.d-flex.flex-row.align-items-end
+    = link_to 'New Project', new_project_path
 
 %table.table
+  %thead
+    %tr
+      %th ID
+      %th Name
+      %th Actions
   %tbody
     - @projects.each do |project|
       %tr
