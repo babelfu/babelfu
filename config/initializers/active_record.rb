@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join('lib/babelfu')
+require Rails.root.join("lib/babelfu")
 
 Rails.application.configure do |c|
   c.config.active_record.encryption.primary_key = Babelfu.config.active_record_encryption_primary_key

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Schema < ActiveRecord::Migration[7.1]
   def change
     create_table "branches", force: :cascade do |t|
