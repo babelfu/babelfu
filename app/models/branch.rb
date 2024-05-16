@@ -24,9 +24,7 @@
 #
 class Branch < ApplicationRecord
   belongs_to :project
-  has_many :translations, foreign_key: :branch_ref, primary_key: :ref
-
-  # broadcasts_refreshes
+  has_many :translations, ->(x) { where(project_id: x.project_id) }, foreign_key: :branch_ref, primary_key: :ref
 
   def to_param
     name

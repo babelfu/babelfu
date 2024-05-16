@@ -17,12 +17,12 @@ class TranslationsPresenter
       pagination = scope.select("translations.key").distinct
       pagination = pagination.where("translations.key ilike ?", "%#{filter_key}%") if filter_key.present?
       if with_proposals
-        pagination = pagination.joins("inner JOIN proposals ON translations.key = proposals.key AND translations.locale = proposals.locale AND translations.branch_name = proposals.branch_name AND proposals.value != translations.value").where(proposals: { branch_name: branch_name }).where.not(proposals: { value: nil })
+        pagination = pagination.joins("inner JOIN proposals ON translations.key = proposals.key AND translations.locale = proposals.locale AND translations.branch_name = proposals.branch_name AND proposals.value != translations.value").where(proposals: { branch_name: branch_name, project_id: project.id }).where.not(proposals: { value: nil })
       end
 
       if with_changes
         pagination = pagination.joins("inner JOIN translations as base_translations ON translations.value != base_translations.value AND translations.key = base_translations.key AND translations.locale = base_translations.locale").
-                     where("base_translations.branch_name = ? and base_translations.branch_ref = ?", base_branch_name, base_branch_ref)
+                     where(base_translations: { project_id: project.id, branch_name: base_branch_name, branch_ref: base_branch_ref })
 
       end
       pagination.page(page)

@@ -30,6 +30,6 @@ class CommitTask < ApplicationRecord
   end
 
   def url
-    "https://#{Babelfu.config.github_domain}/#{project.remote_repository_id}/commit/#{ref}"
+    "#{Babelfu.config.github_domain}/#{project.remote_repository_id}/commit/#{ref}"
   end
 end
