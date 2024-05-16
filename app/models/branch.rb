@@ -31,7 +31,7 @@ class Branch < ApplicationRecord
   end
 
   def url
-    "https://github.com/#{project.remote_repository_id}/tree/#{name}"
+    File.join(Babelfu.config.github_domain, project.remote_repository_id, "tree", name)
   end
 
   def enqueue_sync!

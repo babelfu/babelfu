@@ -52,7 +52,7 @@ class Project < ApplicationRecord
   end
 
   def url
-    "https://github.com/#{remote_repository_id}"
+    File.join(Babelfu.config.github_domain, remote_repository_id)
   end
 
   def enqueue_sync_data!
