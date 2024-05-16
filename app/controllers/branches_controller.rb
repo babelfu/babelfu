@@ -14,7 +14,6 @@ class BranchesController < ApplicationController
     find_branch
 
     @branch.enqueue_sync!
-    redirect_back(fallback_location: project_branch_path(@project, @branch))
   end
 
   def commits

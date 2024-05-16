@@ -15,7 +15,6 @@ class PullRequestsController < ApplicationController
     find_pull_request
 
     @pull_request.enqueue_sync!
-    redirect_back(fallback_location: project_pull_request_path(@project, @pull_request))
   end
 
   # TODO: DRY this up with branches controller

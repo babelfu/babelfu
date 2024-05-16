@@ -26,7 +26,7 @@ class Branch < ApplicationRecord
   belongs_to :project
   has_many :translations, foreign_key: :branch_ref, primary_key: :ref
 
-  broadcasts_refreshes
+  # broadcasts_refreshes
 
   def to_param
     name
@@ -37,7 +37,26 @@ class Branch < ApplicationRecord
   end
 
   def enqueue_sync!
-    update!(sync_status: "in_progress")
+    sync_in_progress!
     SyncBranchJob.perform_later(project, name)
+  end
+
+  def sync_in_progress!
+    update!(sync_status: "in_progress")
+    broadcast_update_sync_status!
+  end
+
+  def sync_done!
+    update!(sync_status: "done", synced_at: Time.zone.now)
+    broadcast_update_sync_status!
+  end
+
+  def sync_failed!
+    update!(sync_status: "failed")
+    broadcast_update_sync_status!
+  end
+
+  def broadcast_update_sync_status!
+    broadcast_update(renderable: SyncBranchWidgetComponent.new(self))
   end
 end

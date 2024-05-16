@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class SyncWidgetComponent < ViewComponent::Base
+  attr_reader :object
+
+  def initialize(object)
+    @object = object
+  end
+
   def tooltip_text
     object.synced_at ? sinced_text_ago : "Not synced yet"
   end
