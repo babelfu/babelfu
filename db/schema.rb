@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_14_214149) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_17_211457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,8 +20,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_14_214149) do
     t.string "ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "sync_status", default: "not_synced"
-    t.datetime "synced_at"
     t.index ["name", "project_id"], name: "index_branches_on_name_and_project_id", unique: true
     t.index ["project_id"], name: "index_branches_on_project_id"
   end
@@ -155,8 +153,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_14_214149) do
     t.string "default_locale"
     t.string "translations_path"
     t.string "default_branch_name"
-    t.string "sync_status", default: "not_synced"
-    t.datetime "synced_at"
     t.string "installation_id"
   end
 
@@ -182,9 +178,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_14_214149) do
     t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "sync_status"
-    t.datetime "synced_at"
     t.index ["project_id"], name: "index_pull_requests_on_project_id"
+  end
+
+  create_table "sync_states", force: :cascade do |t|
+    t.string "syncable_type", null: false
+    t.bigint "syncable_id", null: false
+    t.string "status", default: "not_synced", null: false
+    t.string "ref_before_sync"
+    t.string "ref_after_sync"
+    t.datetime "synced_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["syncable_type", "syncable_id"], name: "index_sync_states_on_syncable", unique: true
   end
 
   create_table "translations", force: :cascade do |t|

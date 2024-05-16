@@ -6,7 +6,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte"; // add this line
 export default defineConfig({
   plugins: [
     RubyPlugin(),
-    FullReload(['config/routes.rb', 'app/views/**/*'], { delay: 200 }),
+    FullReload(['config/routes.rb', 'app/components/**/*', 'app/views/**/*'], { delay: 200 }),
     svelte(),
   ],
 })

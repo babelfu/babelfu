@@ -1,7 +1,10 @@
-.d-flex.flex-column.align-items-end
-  - if object.sync_status != 'in_progress'
-    = button_to title, sync_path, method: :post, class: 'btn btn-primary', "data-bs-toggle": "tooltip", "data-bs-title": tooltip_text, "data-bs-placement": "left"
-  - else
+.d-flex.flex-column.align-items-end.position-relative
+  - if object.sync_in_progress?
     %button.btn.btn-primary{disabled: true}
       %span.spinner-border.spinner-border-sm{"aria-hidden": true}
       %span{role: "status"} Sync in progress
+  - else
+    = button_to title, sync_path, method: :post, class: 'btn btn-primary', "data-bs-toggle": "tooltip", "data-bs-title": tooltip_text, "data-bs-placement": "left"
+    - if live && object.sync_done? && object.change_ref_after_sync?
+      %small.text-muted.position-absolute{style: 'top: 40px; right: 0px; width: 400px; text-align: right;'}
+        The translations may change; please refresh the page.

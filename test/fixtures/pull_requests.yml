@@ -6,8 +6,6 @@
 #  base_branch_name :string
 #  head_branch_name :string
 #  state            :string
-#  sync_status      :string
-#  synced_at        :datetime
 #  title            :string
 #  url              :string
 #  created_at       :datetime         not null

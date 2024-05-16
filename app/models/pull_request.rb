@@ -8,8 +8,6 @@
 #  base_branch_name :string
 #  head_branch_name :string
 #  state            :string
-#  sync_status      :string
-#  synced_at        :datetime
 #  title            :string
 #  url              :string
 #  created_at       :datetime         not null
@@ -27,7 +25,18 @@
 #  fk_rails_...  (project_id => projects.id)
 #
 class PullRequest < ApplicationRecord
+  include Syncable
   belongs_to :project
+  has_one :base_branch, ->(x) { where(project_id: x.project_id) }, foreign_key: :name, primary_key: :base_branch_name, class_name: "Branch"
+  has_one :head_branch, ->(x) { where(project_id: x.project_id) }, foreign_key: :name, primary_key: :head_branch_name, class_name: "Branch"
+
+  def base_branch
+    super || create_base_branch!(project: project)
+  end
+
+  def head_branch
+    super || create_head_branch!(project: project)
+  end
 
   def to_param
     remote_id
@@ -35,25 +44,14 @@ class PullRequest < ApplicationRecord
 
   def enqueue_sync!
     sync_in_progress!
-    SyncPullRequestJob.perform_later(project_id, remote_id)
+    SyncPullRequestJob.perform_later(project, remote_id)
   end
 
-  def sync_in_progress!
-    update!(sync_status: "in_progress")
-    broadcast_update_sync_status!
+  def sync_ref
+    "#{base_branch.ref}:#{head_branch.ref}"
   end
 
-  def sync_done!
-    update!(sync_status: "done", synced_at: Time.zone.now)
-    broadcast_update_sync_status!
-  end
-
-  def sync_failed!
-    update!(sync_status: "failed")
-    broadcast_update_sync_status!
-  end
-
-  def broadcast_update_sync_status!
-    broadcast_update(renderable: SyncPullRequestWidgetComponent.new(self))
+  def broadcast_update_sync_status
+    broadcast_update(renderable: SyncPullRequestWidgetComponent.new(self, live: true))
   end
 end
