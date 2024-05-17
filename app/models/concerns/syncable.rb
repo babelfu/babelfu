@@ -2,22 +2,14 @@
 
 module Syncable
   extend ActiveSupport::Concern
+  include LazyHasOne
 
   included do
     has_one :sync_state, as: :syncable, dependent: :delete
-    before_create :build_default_sync_state
+    lazy_has_one :sync_state
   end
 
   delegate :synced_at, to: :sync_state
-
-  def build_default_sync_state
-    build_sync_state
-    true
-  end
-
-  def sync_state
-    super || create_sync_state!
-  end
 
   def sync_status
     sync_state.status

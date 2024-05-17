@@ -30,6 +30,8 @@ class CommitTask < ApplicationRecord
   end
 
   def url
+    return nil if ref.blank?
+
     File.join(Babelfu.config.github_domain, project.remote_repository_id, "commit", ref)
   end
 end

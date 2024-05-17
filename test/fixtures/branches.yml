@@ -19,10 +19,11 @@
 #  fk_rails_...  (project_id => projects.id)
 #
 
-# one:
-#   project: one
-#   name: MyString
-#
-# two:
-#   project: two
-#   name: MyString
+one_master:
+  project: one
+  name: master
+  ref: "master-ref"
+one_feature:
+  project: one
+  name: feature
+  ref: "feature-ref"

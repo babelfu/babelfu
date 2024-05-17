@@ -19,6 +19,7 @@ class SyncProjectJob < ApplicationJob
     attrs = { default_branch_name: data.default_branch }
     project.update!(attrs)
 
+    project.default_branch!.enqueue_sync!
     FetchBranches.new(project).fetch!
     FetchPullRequests.new(project).fetch!
     project.sync_done!
