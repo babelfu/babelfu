@@ -6,8 +6,6 @@
 #  default_branch_name  :string
 #  default_locale       :string
 #  name                 :string
-#  sync_status          :string           default("not_synced")
-#  synced_at            :datetime
 #  translations_path    :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null

@@ -8,8 +8,6 @@
 #  default_branch_name  :string
 #  default_locale       :string
 #  name                 :string
-#  sync_status          :string           default("not_synced")
-#  synced_at            :datetime
 #  translations_path    :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -17,6 +15,8 @@
 #  remote_repository_id :string
 #
 class Project < ApplicationRecord
+  include Syncable
+
   has_many :invitations, class_name: "ProjectInvitation", dependent: :delete_all
   has_many :memberships, dependent: :delete_all
   has_many :users, through: :memberships
@@ -56,7 +56,7 @@ class Project < ApplicationRecord
   end
 
   def enqueue_sync_data!
-    update!(sync_status: "in_progress")
+    sync_in_progress!
     SyncProjectJob.perform_later(self)
   end
 

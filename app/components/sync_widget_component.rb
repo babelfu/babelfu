@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class SyncWidgetComponent < ViewComponent::Base
-  attr_reader :object
+  attr_reader :object, :live
 
-  def initialize(object)
+  # live is a boolean that determines if the component is being rendered as part
+  # of a stream update or not.
+  def initialize(object, live: false)
     @object = object
+    @live = live
   end
 
   def tooltip_text
