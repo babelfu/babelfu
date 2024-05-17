@@ -2,7 +2,7 @@
 
 class Schema < ActiveRecord::Migration[7.1]
   def change
-    create_table "branches", force: :cascade do |t|
+    create_table "branches" do |t|
       t.bigint "project_id", null: false
       t.string "name"
       t.string "ref"
@@ -14,7 +14,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_branches_on_project_id"
     end
 
-    create_table "commit_tasks", force: :cascade do |t|
+    create_table "commit_tasks" do |t|
       t.bigint "project_id", null: false
       t.string "branch_name"
       t.datetime "created_at", null: false
@@ -25,7 +25,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_commit_tasks_on_project_id"
     end
 
-    create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.text "description"
@@ -40,7 +40,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.datetime "finished_at"
     end
 
-    create_table "good_job_executions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    create_table "good_job_executions", id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.uuid "active_job_id", null: false
@@ -55,13 +55,13 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
     end
 
-    create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.jsonb "state"
     end
 
-    create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.text "key"
@@ -69,7 +69,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["key"], name: "index_good_job_settings_on_key", unique: true
     end
 
-    create_table "good_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    create_table "good_jobs", id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.text "queue_name"
       t.integer "priority"
       t.jsonb "serialized_params"
@@ -105,7 +105,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
     end
 
-    create_table "memberships", force: :cascade do |t|
+    create_table "memberships" do |t|
       t.bigint "user_id", null: false
       t.bigint "project_id", null: false
       t.boolean "admin"
@@ -115,7 +115,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["user_id"], name: "index_memberships_on_user_id"
     end
 
-    create_table "metadata_users", force: :cascade do |t|
+    create_table "metadata_users" do |t|
       t.bigint "user_id", null: false
       t.json "github_repositories"
       t.json "github_installations"
@@ -125,7 +125,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["user_id"], name: "index_metadata_users_on_user_id"
     end
 
-    create_table "project_invitations", force: :cascade do |t|
+    create_table "project_invitations" do |t|
       t.bigint "project_id", null: false
       t.string "email"
       t.datetime "accepted_at"
@@ -135,7 +135,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_project_invitations_on_project_id"
     end
 
-    create_table "projects", force: :cascade do |t|
+    create_table "projects" do |t|
       t.string "name"
       t.string "remote_repository_id"
       t.datetime "created_at", null: false
@@ -148,7 +148,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.string "installation_id"
     end
 
-    create_table "proposals", force: :cascade do |t|
+    create_table "proposals" do |t|
       t.bigint "project_id", null: false
       t.string "branch_name"
       t.string "key"
@@ -159,7 +159,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_proposals_on_project_id"
     end
 
-    create_table "pull_requests", force: :cascade do |t|
+    create_table "pull_requests" do |t|
       t.bigint "project_id", null: false
       t.string "title"
       t.string "url"
@@ -175,7 +175,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_pull_requests_on_project_id"
     end
 
-    create_table "translations", force: :cascade do |t|
+    create_table "translations" do |t|
       t.bigint "project_id", null: false
       t.string "locale"
       t.string "key"
@@ -188,7 +188,7 @@ class Schema < ActiveRecord::Migration[7.1]
       t.index ["project_id"], name: "index_translations_on_project_id"
     end
 
-    create_table "users", force: :cascade do |t|
+    create_table "users" do |t|
       t.string "email", default: "", null: false
       t.string "encrypted_password", default: "", null: false
       t.string "reset_password_token"
