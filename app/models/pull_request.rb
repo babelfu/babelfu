@@ -26,17 +26,19 @@
 #
 class PullRequest < ApplicationRecord
   include Syncable
+  include LazyHasOne
+
   belongs_to :project
   has_one :base_branch, ->(x) { where(project_id: x.project_id) }, foreign_key: :name, primary_key: :base_branch_name, class_name: "Branch"
+  lazy_has_one :base_branch
+
   has_one :head_branch, ->(x) { where(project_id: x.project_id) }, foreign_key: :name, primary_key: :head_branch_name, class_name: "Branch"
+  lazy_has_one :head_branch
 
-  def base_branch
-    super || create_base_branch!(project: project)
-  end
-
-  def head_branch
-    super || create_head_branch!(project: project)
-  end
+  validates :remote_id, presence: true
+  validates :base_branch_name, presence: true
+  validates :head_branch_name, presence: true
+  # validates :repository_id, presence: true TODO: we may want to remove this field
 
   def to_param
     remote_id

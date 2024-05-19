@@ -16,6 +16,7 @@
 #
 class Project < ApplicationRecord
   include Syncable
+  include LazyHasOne
 
   has_many :invitations, class_name: "ProjectInvitation", dependent: :delete_all
   has_many :memberships, dependent: :delete_all
@@ -23,6 +24,7 @@ class Project < ApplicationRecord
 
   has_many :branches, dependent: :delete_all
   has_one :default_branch, ->(x) { where(name: x.default_branch_name) }, class_name: "Branch"
+  lazy_has_one :default_branch
 
   has_many :translations, dependent: :delete_all
   has_many :proposals, dependent: :delete_all
@@ -43,6 +45,7 @@ class Project < ApplicationRecord
     super.presence || "en"
   end
 
+  # probably we should validate the presence of translations_path
   def translations_path
     super.presence || "config/locales"
   end
@@ -58,12 +61,5 @@ class Project < ApplicationRecord
   def enqueue_sync_data!
     sync_in_progress!
     SyncProjectJob.perform_later(self)
-  end
-
-  # Returns the branches that need to be synced based on default repo branch
-  # and the head and base branches of the pull requests.
-  # It returns the default_branch first.
-  def branches_to_sync
-    [[default_branch_name] + pull_requests.flat_map { |x| [x.head_branch_name, x.base_branch_name] }].compact.flatten.uniq
   end
 end

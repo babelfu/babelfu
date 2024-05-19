@@ -23,8 +23,10 @@
 #  fk_rails_...  (project_id => projects.id)
 #
 
-# one:
-#   project: one
-#
-# two:
-#   project: two
+one_one:
+  project: one
+  base_branch_name: master
+  head_branch_name: feature
+  title: Feature one
+  url: https://example.com/one/pr/feature
+  remote_id: 1
