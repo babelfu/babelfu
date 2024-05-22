@@ -24,10 +24,28 @@
 class Proposal < ApplicationRecord
   belongs_to :project
 
-  scope :with_changes, -> { joins("inner JOIN translations ON translations.key = proposals.key AND translations.locale = proposals.locale AND translations.branch_name = proposals.branch_name AND proposals.value != translations.value").distinct }
+  INNER_JOIN_WITH_CHANGES = <<-SQL.squish
+    INNER JOIN branches ON branches.name = proposals.branch_name
+    INNER JOIN translations
+      ON translations.key = proposals.key
+     AND translations.locale = proposals.locale
+     AND translations.branch_name = proposals.branch_name
+     AND proposals.value != translations.value
+     AND translations.branch_ref = branches.ref
+  SQL
+
+  scope :with_changes, -> { joins(INNER_JOIN_WITH_CHANGES).distinct }
 
   def translation
-    project.translations.find_by(key: key, locale: locale, branch_name: branch_name)
+    project.translations.find_by(key: key, locale: locale, branch_name: branch_name, branch_ref: branch_ref)
+  end
+
+  def branch
+    project.branches.find_by(name: branch_name)
+  end
+
+  def branch_ref
+    branch&.ref
   end
 
   def file_path

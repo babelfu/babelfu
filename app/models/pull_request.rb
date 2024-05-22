@@ -46,7 +46,7 @@ class PullRequest < ApplicationRecord
 
   def enqueue_sync!
     sync_in_progress!
-    SyncPullRequestJob.perform_later(project, remote_id)
+    SyncPullRequestJob.enqueue_batch(project, remote_id)
   end
 
   def sync_ref

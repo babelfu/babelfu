@@ -1,31 +1,38 @@
 # frozen_string_literal: true
 
 class SyncPullRequestJob < ApplicationJob
-  include GoodJob::ActiveJobExtensions::Concurrency
-
-  good_job_control_concurrency_with(
-    perform_limit: 1,
-    enqueue_limit: 2,
-    enqueue_throttle: [10, 1.minute],
-    key: -> { "#{self.class.name}:project_id:#{arguments.first.id}:pr:#{arguments.second}" }
-  )
-
   queue_as :default
 
-  def perform(project, remote_id)
+  def self.enqueue_batch(project, remote_id)
+    GoodJob::Batch.enqueue(on_finish: SyncPullRequestJob, project:, remote_id:)
+  end
+
+  def perform(batch, _options)
+    project = batch.properties[:project]
+    remote_id = batch.properties[:remote_id]
     pr = project.pull_requests.find_by(remote_id:)
-    pr&.sync_in_progress!
 
-    client = project.client
-    data = client.pull_request(remote_id)
-    pr = UpsertPullRequestFromGithubDataService.call(project, data)
-    pr.sync_in_progress!
+    if batch.properties[:stage].nil?
+      # enqueue the sync branch job for the base branch
+      batch.enqueue(stage: 1) do
+        SyncBranchBatchJob.perform_later(project, pr.base_branch_name)
+      end
+    elsif batch.properties[:stage] == 1
+      # and update the branch with the remote ref
+      SyncBranchBatchJob.update_branch!(batch, project, pr.base_branch_name)
 
-    # TODO: do it as batch jobs
-    FetchBranchTranslations.new(project, branch_name: pr.base_branch_name).fetch!
-    FetchBranchTranslations.new(project, branch_name: pr.head_branch_name).fetch!
+      # enqueue the sync branch job for the head branch
+      batch.enqueue(stage: 2) do
+        SyncBranchBatchJob.perform_later(project, pr.head_branch_name)
+      end
+    elsif batch.properties[:stage] == 2
 
-    pr.sync_done!
+      # and update the branch with the remote ref
+      SyncBranchBatchJob.update_branch!(batch, project, pr.head_branch_name)
+
+      # finally mark the pull request as synced
+      pr&.sync_done!
+    end
   rescue StandardError => e
     pr&.sync_failed!
 

@@ -39,7 +39,7 @@ class Branch < ApplicationRecord
 
   def enqueue_sync!
     sync_in_progress!
-    SyncBranchJob.perform_later(project, name)
+    SyncBranchJob.enqueue_batch(project, name)
   end
 
   def broadcast_update_sync_status
