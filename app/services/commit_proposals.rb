@@ -11,7 +11,6 @@ class CommitProposals
   end
 
   def commit!
-    fetch_branch_translations!
     tree_content = []
     files_with_content.each do |file_path, content|
       sha = client.create_blob(Base64.encode64(content), "base64")
@@ -23,19 +22,21 @@ class CommitProposals
     client.update_ref("heads/#{head_branch_name}", commit.sha)
   end
 
-  def fetch_branch_translations!
-    FetchBranchTranslations.new(project, branch_name: head_branch_name).fetch!
+  def proposals
+    @proposals ||= project.proposals.where(branch_name: head_branch_name)
   end
 
-  def head_branch
-    @head_branch ||= project.branches.find_by(name: head_branch_name)
-  end
+  private
+
+  delegate :client, to: :project
 
   def head_branch_ref
     head_branch&.ref
   end
 
-  delegate :client, to: :project
+  def head_branch
+    @head_branch ||= project.branches.find_by(name: head_branch_name)
+  end
 
   def files_with_content
     proposal_files.index_with do |file_path|
@@ -50,7 +51,9 @@ class CommitProposals
   def generate_content(file_path, data)
     # generate the content of the file with the translations
     # it should be able to generate json, yaml, etc
-    # depending on the file extension
+    # depending on the file extension.
+    #
+    # This is a naive implementation that only supports I18n rails like systems
     case File.extname(file_path)
     when ".json"
       JSON.pretty_generate(data)
@@ -64,8 +67,8 @@ class CommitProposals
   def data_for_file_path(file_path)
     # generate the flat hash of translations from the existing translations
     # including the locale in the key
-    content = project.translations.where(file_path:,
-                                         branch_name: head_branch_name).each_with_object({}) do |translation, hash|
+    translations = project.translations.where(file_path:, branch_name: head_branch_name)
+    content = translations.each_with_object({}) do |translation, hash|
       hash["#{translation.locale}.#{translation.key}"] = translation.value
     end
 
@@ -82,9 +85,5 @@ class CommitProposals
       deep_key.deep_merge!(deep_key_tmp)
     end
     deep_key
-  end
-
-  def proposals
-    @proposals ||= project.proposals.where(branch_name: head_branch_name)
   end
 end

@@ -12,16 +12,31 @@ class TranslationsPresenter
     @keys ||= pagination.pluck(:key)
   end
 
+  WITH_PROPOSAL_JOIN = <<-SQL.squish
+    INNER JOIN proposals
+            ON translations.key = proposals.key
+           AND translations.locale = proposals.locale
+           AND translations.branch_name = proposals.branch_name
+           AND proposals.value != translations.value
+  SQL
+
+  WITH_CHANGES_JOIN = <<-SQL.squish
+    INNER JOIN translations AS base_translations
+            ON translations.value != base_translations.value
+           AND translations.key = base_translations.key
+           AND translations.locale = base_translations.locale
+  SQL
+
   def pagination
     @pagination ||= begin
       pagination = scope.select("translations.key").distinct
       pagination = pagination.where("translations.key ilike ?", "%#{filter_key}%") if filter_key.present?
       if with_proposals
-        pagination = pagination.joins("inner JOIN proposals ON translations.key = proposals.key AND translations.locale = proposals.locale AND translations.branch_name = proposals.branch_name AND proposals.value != translations.value").where(proposals: { branch_name: branch_name, project_id: project.id }).where.not(proposals: { value: nil })
+        pagination = pagination.joins(WITH_PROPOSALS_JOIN).where(proposals: { branch_name: branch_name, project_id: project.id }).where.not(proposals: { value: nil })
       end
 
       if with_changes
-        pagination = pagination.joins("inner JOIN translations as base_translations ON translations.value != base_translations.value AND translations.key = base_translations.key AND translations.locale = base_translations.locale").
+        pagination = pagination.joins(WITH_CHANGES_JOIN).
                      where(base_translations: { project_id: project.id, branch_name: base_branch_name, branch_ref: base_branch_ref })
 
       end

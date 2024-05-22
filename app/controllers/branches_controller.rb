@@ -29,7 +29,7 @@ class BranchesController < ApplicationController
     @commit_task.branch_name = @branch.name
 
     if @commit_task.save
-      CommitJob.perform_later(@commit_task)
+      CommitJob.enqueue_batch(@commit_task)
       flash[:notice] = "Commit task created"
     else
       flash[:error] = "There was an error creating the commit task"
