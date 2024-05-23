@@ -5,10 +5,11 @@ class PullRequestsController < ApplicationController
 
   def show
     @pull_request = @project.pull_requests.find_by(remote_id: params[:id])
+
     @translations_presenter = TranslationsPresenter.new(@project,
                                                         branch_name: @pull_request.head_branch_name,
                                                         base_branch_name: @pull_request.base_branch_name,
-                                                        **params.to_unsafe_h)
+                                                        **params.to_unsafe_h.merge(filter_locales: filter_locales))
   end
 
   def sync

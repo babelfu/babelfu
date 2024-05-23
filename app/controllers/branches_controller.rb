@@ -5,9 +5,10 @@ class BranchesController < ApplicationController
 
   def show
     find_branch
+
     @translations_presenter = TranslationsPresenter.new(@project,
                                                         branch_name: @branch.name,
-                                                        **params.to_unsafe_h)
+                                                        **params.to_unsafe_h.merge(filter_locales: filter_locales))
   end
 
   def sync

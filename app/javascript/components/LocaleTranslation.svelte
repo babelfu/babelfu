@@ -10,8 +10,6 @@
   }
 
   const save = () => {
-    console.log(proposalsPath, key, locale, tempValue);
-
     saving = true;
     fetch(proposalsPath, {
       method: 'POST',
