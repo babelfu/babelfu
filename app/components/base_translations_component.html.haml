@@ -15,8 +15,8 @@
     %div.px-2
       %div{data: {controller: "locales", "available-locales": @translations_presenter.available_locales.to_json, "selected-locales": @translations_presenter.selected_locales.to_json}}
       %small.d-block.text-muted.text-truncate{style: "max-width: 100px;"}
-        - if params[:filter_locales].present?
-          = params[:filter_locales].join(', ')
+        - if @translations_presenter.filter_locales.present?
+          = @translations_presenter.filter_locales.join(', ')
         - else
           All locales
     %div.px-2

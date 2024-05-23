@@ -12,7 +12,7 @@ class TranslationsPresenter
     @keys ||= pagination.pluck(:key)
   end
 
-  WITH_PROPOSAL_JOIN = <<-SQL.squish
+  WITH_PROPOSALS_JOIN = <<-SQL.squish
     INNER JOIN proposals
             ON translations.key = proposals.key
            AND translations.locale = proposals.locale
@@ -29,7 +29,7 @@ class TranslationsPresenter
 
   def pagination
     @pagination ||= begin
-      pagination = scope.select("translations.key").distinct
+      pagination = scope.select("translations.key").distinct.order("translations.key")
       pagination = pagination.where("translations.key ilike ?", "%#{filter_key}%") if filter_key.present?
       if with_proposals
         pagination = pagination.joins(WITH_PROPOSALS_JOIN).where(proposals: { branch_name: branch_name, project_id: project.id }).where.not(proposals: { value: nil })
