@@ -12,7 +12,7 @@ The critical difference of Babelfu is that it uses GitHub as the source of truth
 for your translations. You can use the same git workflow transparently
 because Babelfu changes will appear as a regular commit in your pull requests.
 
-Babelfu fetch the translations from your repository and allows you to edit them; the
+Babelfu fetch the translations from your repository and allows you to edit them;
 the same UI detects changes between the HEAD and BASE branches of your pull requests and display
 the differences accordingly.
 
