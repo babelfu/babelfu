@@ -10,5 +10,4 @@
           = link_to @pull_request.title, project_pull_request_path(@project, @pull_request)
         %li.breadcrumb-item.active{"aria-current" => "page"} Commit changes
 
-
 = render CommitsComponent.new(presenter: @commits_presenter, create_commit_path: commit_create_project_pull_request_path(@project, @pull_request))

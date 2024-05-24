@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: move to private method the methods that are not used outside the class
 class CommitProposals
   attr_reader :project, :head_branch_name, :base_branch_name
 
