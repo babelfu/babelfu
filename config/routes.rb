@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       post :sync
     end
 
-    resources :branches, only: :show do
+    resources :branches, only: [:index, :show] do
       member do
         post :sync
         post :commit_create
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :pull_requests, only: :show do
+    resources :pull_requests, only: [:index, :show] do
       member do
         post :sync
         post :commit_create

@@ -3,6 +3,10 @@
 class BranchesController < ApplicationController
   before_action :find_project
 
+  def index
+    @branches = @project.branches.page(params[:page]).order(updated_at: :desc)
+  end
+
   def show
     find_branch
 
