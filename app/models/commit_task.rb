@@ -25,6 +25,16 @@ class CommitTask < ApplicationRecord
   belongs_to :project
   validates :branch_name, presence: true
 
+  after_commit :reload_commit_view
+
+  def reload_commit_view
+    broadcast_refresh_to(presenter.commit_view_id)
+  end
+
+  def presenter
+    @presenter ||= CommitsPresenter.new(project:, branch_name:)
+  end
+
   def commit_proposals
     @commit_proposals ||= CommitProposals.new(project, branch_name)
   end

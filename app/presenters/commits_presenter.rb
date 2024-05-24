@@ -8,6 +8,10 @@ class CommitsPresenter
     @branch_name = branch_name
   end
 
+  def commit_view_id
+    "commit-view:#{project.id}:#{branch_name}"
+  end
+
   def commited_tasks
     @commited_tasks ||= @project.commit_tasks.where(branch_name:).where.not(commited_at: nil).order(id: :desc)
   end
