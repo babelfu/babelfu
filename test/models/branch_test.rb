@@ -1,5 +1,25 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: branches
+#
+#  id         :bigint           not null, primary key
+#  name       :string
+#  ref        :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  project_id :bigint           not null
+#
+# Indexes
+#
+#  index_branches_on_name_and_project_id  (name,project_id) UNIQUE
+#  index_branches_on_project_id           (project_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
+#
 require "test_helper"
 
 class BranchTest < ActiveSupport::TestCase

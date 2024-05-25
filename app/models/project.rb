@@ -4,19 +4,23 @@
 #
 # Table name: projects
 #
-#  id                   :bigint           not null, primary key
-#  default_branch_name  :string
-#  default_locale       :string
-#  name                 :string
-#  translations_path    :string
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  installation_id      :string
-#  remote_repository_id :string
+#  id                             :bigint           not null, primary key
+#  default_branch_name            :string
+#  default_locale                 :string
+#  github_access_token            :string
+#  github_access_token_expires_at :datetime
+#  name                           :string
+#  translations_path              :string
+#  created_at                     :datetime         not null
+#  updated_at                     :datetime         not null
+#  installation_id                :string
+#  remote_repository_id           :string
 #
 class Project < ApplicationRecord
   include Syncable
   include LazyHasOne
+
+  encrypts :github_access_token
 
   has_many :invitations, class_name: "ProjectInvitation", dependent: :delete_all
   has_many :memberships, dependent: :delete_all

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_17_211457) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_105223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -154,6 +154,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_211457) do
     t.string "translations_path"
     t.string "default_branch_name"
     t.string "installation_id"
+    t.string "github_access_token"
+    t.datetime "github_access_token_expires_at"
   end
 
   create_table "proposals", force: :cascade do |t|

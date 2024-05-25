@@ -1,5 +1,21 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                             :bigint           not null, primary key
+#  default_branch_name            :string
+#  default_locale                 :string
+#  github_access_token            :string
+#  github_access_token_expires_at :datetime
+#  name                           :string
+#  translations_path              :string
+#  created_at                     :datetime         not null
+#  updated_at                     :datetime         not null
+#  installation_id                :string
+#  remote_repository_id           :string
+#
 require "test_helper"
 
 class ProjectTest < ActiveSupport::TestCase
