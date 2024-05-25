@@ -3,21 +3,33 @@
 class ProjectClient
   attr_reader :project
 
+  MAX_TIME_TO_WAIT_FOR_LOCK = 2
   RequestError = Class.new(StandardError)
 
   class << self
     def with_access_token(method_name)
       original_method = instance_method(method_name)
       define_method(method_name) do |*args, **kwargs, &block|
-        # TODO: review the expiration time logic
-        build_client if access_token.expires_at < 10.minutes.from_now
+        retried = false
+        # TODO: review if we want to enqueue a job to refresh the token if
+        # it's about to expire
         res = original_method.bind(self).call(*args, **kwargs, &block)
-        # TODO: rescue expired token and retry
         # TODO: handle rate limit exceeded
         # TODO: I would like to specify the success code per method
         raise RequestError, res.inspect unless client.last_response.status.in?([200, 201])
 
         res
+      rescue Octokit::Unauthorized => e
+        # An unauthorized request could be due to an expired token
+        # so we try to refresh the token and retry the request only once
+        Rails.logger.error("Unauthorized request: #{e.message}")
+        if retried
+          rasise e
+        else
+          retried = true
+          build_client(force: true)
+          retry
+        end
       end
     end
   end
@@ -86,16 +98,35 @@ class ProjectClient
     @client || build_client
   end
 
-  def build_client
-    @client = Octokit::Client.new(access_token: access_token.token)
+  def build_client(force: false)
+    @client = Octokit::Client.new(access_token: fetch_access_token!(force:))
+  end
+
+  def fetch_access_token!(force: false)
+    # We just return the access token if it's valid and we are not forcing
+    # We would like to force it when the request fails with an Unauthorized error
+    return access_token if !force && valid_access_token?
+
+    # We use an advisory lock to avoid multiple requests to fetch the access token
+    # at the same time. For example when syncing a branch, it trigger multiple
+    # SyncBranchFileJob
+    ActiveRecord::Base.with_advisory_lock!("fetch_access_token:#{project.id}", MAX_TIME_TO_WAIT_FOR_LOCK) do
+      # Becuase we could be waiting for the lock, maybe the token was already fetched
+      # by another process, so we check again if the token is valid before fetching it
+      # again and we return it if it's valid unless we are forcing it.
+      return access_token if !force && valid_access_token?
+
+      data = GithubAppClient.client.create_app_installation_access_token(installation_id)
+      project.update!(github_access_token: data.token, github_access_token_expires_at: data.expires_at)
+      access_token
+    end
   end
 
   def access_token
-    # TODO: makes sense to cache the token between requests?
-    @access_token ||= fetch_access_token!
+    project.github_access_token
   end
 
-  def fetch_access_token!
-    @access_token = GithubAppClient.client.create_app_installation_access_token(installation_id)
+  def valid_access_token?
+    project.github_access_token.present? && project.github_access_token_expires_at > Time.current.utc # The UTC is important
   end
 end

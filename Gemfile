@@ -76,7 +76,6 @@ group :test do
   gem "simplecov", require: false
 end
 
-gem "activejob-perform_later"
 gem "bootstrap5-kaminari-views"
 gem "devise"
 gem "devise-bootstrap-views"
@@ -90,3 +89,4 @@ gem "octokit"
 gem "simple_form"
 gem "view_component"
 gem "vite_rails"
+gem "with_advisory_lock"
