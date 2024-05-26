@@ -9,9 +9,9 @@
 #  email                           :string           default(""), not null
 #  encrypted_password              :string           default(""), not null
 #  github_access_token             :string
+#  github_access_token_expires_at  :datetime
 #  github_refresh_token            :string
-#  github_refresh_token_expires_in :integer
-#  github_repositories             :json
+#  github_refresh_token_expires_at :datetime
 #  remember_created_at             :datetime
 #  reset_password_sent_at          :datetime
 #  reset_password_token            :string
@@ -38,12 +38,28 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :delete_all
   has_many :projects, through: :memberships
   has_one :metadata, class_name: "MetadataUser", dependent: :destroy
+  def github_username
+    metadata&.github_user&.dig("login")
+  end
+
+  def client
+    @client ||= UserClient.new(self)
+  end
+
+  def save_github_access_token!(token)
+    self.github_access_token = token["access_token"]
+    self.github_access_token_expires_at = Time.current + token["expires_in"]
+    self.github_refresh_token = token["refresh_token"]
+    self.github_refresh_token_expires_at = Time.current + token["refresh_token_expires_in"]
+    save!
+  end
 
   def clear_github_connection!
     transaction do
       self.github_access_token = nil
+      self.github_access_token_expires_at = nil
       self.github_refresh_token = nil
-      self.github_refresh_token_expires_in = nil
+      self.github_refresh_token_expires_at = nil
       save!
       if metadata
         metadata.github_repositories = nil
@@ -52,28 +68,6 @@ class User < ApplicationRecord
         metadata.save!
       end
     end
-  end
-
-  def github_username
-    metadata&.github_user&.dig("login")
-  end
-
-  def client
-    @client ||= Octokit::Client.new(access_token: github_access_token)
-  end
-
-  def save_github_access_token!(token)
-    self.github_access_token = token["access_token"]
-    self.github_refresh_token = token["refresh_token"]
-    self.github_refresh_token_expires_in = token["refresh_token_expires_in"]
-    save!
-  end
-
-  # TODO: this should be hooked up to somewhere...
-  # probably we need a user client like project client
-  def regenerate_github_access_token!
-    token = GithubAppClient.generate_access_token_from_refresh_token(github_refresh_token)
-    save_github_access_token!(token)
   end
 
   def github_remote_repositories_for_select

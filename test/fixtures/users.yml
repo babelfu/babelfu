@@ -7,9 +7,9 @@
 #  email                           :string           default(""), not null
 #  encrypted_password              :string           default(""), not null
 #  github_access_token             :string
+#  github_access_token_expires_at  :datetime
 #  github_refresh_token            :string
-#  github_refresh_token_expires_in :integer
-#  github_repositories             :json
+#  github_refresh_token_expires_at :datetime
 #  remember_created_at             :datetime
 #  reset_password_sent_at          :datetime
 #  reset_password_token            :string

@@ -1,0 +1,3 @@
+%h1 Account #{current_user.email}
+
+= button_to "Request sync", request_sync_account_path, method: :post

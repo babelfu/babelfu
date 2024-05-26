@@ -13,6 +13,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "projects#index"
+
+  resource :account, only: [:show] do
+    member do
+      post :request_sync
+    end
+  end
   resources :projects do
     resources :members, only: %i[index], controller: "project_members"
     resources :invitations, only: %i[index new create destroy], controller: "project_invitations"
