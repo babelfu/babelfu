@@ -6,12 +6,15 @@ class BaseClient
   RequestError = Class.new(StandardError)
 
   class << self
-    def api_wrapper(method_names)
-      Array.wrap(method_names).each do |method_name|
-        original_method = instance_method(method_name)
-        define_method(method_name) do |*args, **kwargs, &block|
-          retried = false
-          res = original_method.bind(self).call(*args, **kwargs, &block)
+    def api_wrapper(original_method_name)
+      raise ArgumentError, "Method name must start with _" unless original_method_name.start_with?("_")
+
+      method_name = original_method_name[1..].to_sym
+
+      define_method(method_name) do |*args, **kwargs, &block|
+        retried = false
+        begin
+          res = send(original_method_name, *args, **kwargs, &block)
           raise RequestError, res.inspect unless client.last_response.status.in?([200, 201])
 
           res

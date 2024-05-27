@@ -7,51 +7,51 @@ class ProjectClient < BaseClient
     @project = project
   end
 
-  api_wrapper def blob(sha)
+  api_wrapper def _blob(sha)
     client.blob(repo_id, sha)
   end
 
-  api_wrapper def branch(branch_name)
+  api_wrapper def _branch(branch_name)
     client.branch(repo_id, branch_name)
   end
 
-  api_wrapper def branches
+  api_wrapper def _branches
     client.branches(repo_id)
   end
 
-  api_wrapper def contents(path:, ref:)
+  api_wrapper def _contents(path:, ref:)
     client.contents(repo_id, path: path, ref: ref)
   end
 
-  api_wrapper def create_blob(content, encoding)
+  api_wrapper def _create_blob(content, encoding)
     client.create_blob(repo_id, content, encoding)
   end
 
-  api_wrapper def create_tree(tree_content, base_tree:)
+  api_wrapper def _create_tree(tree_content, base_tree:)
     client.create_tree(repo_id, tree_content, base_tree:)
   end
 
-  api_wrapper def create_commit(message, tree_sha, parent_sha)
+  api_wrapper def _create_commit(message, tree_sha, parent_sha)
     client.create_commit(repo_id, message, tree_sha, parent_sha)
   end
 
-  api_wrapper def pull_requests(state: "open")
+  api_wrapper def _pull_requests(state: "open")
     client.pull_requests(repo_id, state: state)
   end
 
-  api_wrapper def pull_request(number)
+  api_wrapper def _pull_request(number)
     client.pull_request(repo_id, number)
   end
 
-  api_wrapper def repository
+  api_wrapper def _repository
     client.repository(repo_id)
   end
 
-  api_wrapper def tree(sha, recursive: false)
+  api_wrapper def _tree(sha, recursive: false)
     client.tree(repo_id, sha, recursive: recursive)
   end
 
-  api_wrapper def update_ref(ref, sha)
+  api_wrapper def _update_ref(ref, sha)
     client.update_ref(repo_id, ref, sha)
   end
 
