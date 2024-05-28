@@ -13,7 +13,7 @@ class UserClient < BaseClient
   end
 
   def valid_access_token?
-    access_token.present? && user.github_access_token_expires_at > Time.current
+    access_token.present? && user.github_access_token_expires_at.present? && user.github_access_token_expires_at > Time.current
   end
 
   def fetch_access_token_mutex_key

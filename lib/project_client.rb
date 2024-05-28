@@ -79,6 +79,6 @@ class ProjectClient < BaseClient
   end
 
   def valid_access_token?
-    project.github_access_token.present? && project.github_access_token_expires_at > Time.current.utc # The UTC is important
+    project.github_access_token.present? && project.github_access_token_expires_at.present? && project.github_access_token_expires_at > Time.current.utc # The UTC is important
   end
 end
