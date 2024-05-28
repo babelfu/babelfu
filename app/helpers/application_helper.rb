@@ -11,6 +11,6 @@ module ApplicationHelper
   end
 
   def connect_to_github_message
-    "Don't see your repository? #{link_to 'Configure the installation', GithubAppClient.app.html_url} and reload".html_safe
+    "Don't see your repository? Check the #{link_to 'connections', connections_path}.".html_safe
   end
 end

@@ -15,4 +15,9 @@ class ConnectionsController < ApplicationController
     FetchGithubUserMetadataJob.perform_later(current_user)
     redirect_to connections_path
   end
+
+  def request_sync
+    FetchGithubUserMetadataJob.perform_later(current_user)
+    redirect_to connections_path, notice: "Sync requested"
+  end
 end

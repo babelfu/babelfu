@@ -38,6 +38,15 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :delete_all
   has_many :projects, through: :memberships
   has_one :metadata, class_name: "MetadataUser", dependent: :destroy
+
+  def stream_connections_id
+    "connections:#{id}"
+  end
+
+  def refresh_connections_view
+    broadcast_refresh_to(stream_connections_id)
+  end
+
   def github_username
     metadata&.github_user&.dig("login")
   end
@@ -72,6 +81,13 @@ class User < ApplicationRecord
 
   def github_remote_repositories_for_select
     github_remote_repositories.map { |k, v| [v[:repo]["full_name"], k] }
+  end
+
+  # TODO: improve the namign of this method and the one below
+  def github_repositories
+    metadata.github_repositories.values.flatten
+  rescue StandardError
+    []
   end
 
   def github_remote_repositories

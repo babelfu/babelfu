@@ -1,5 +1,5 @@
+= turbo_stream_from current_user.stream_connections_id
 %h1 Connections
-
 - if current_user.github_access_token.present?
   %h2 Github
   - if current_user&.metadata&.github_user&.present?
@@ -8,5 +8,26 @@
       = link_to current_user.metadata.github_user['login'], current_user.metadata.github_user['html_url'], target: '_blank'
       %br
       = button_to "Disconnect", disconnect_github_connections_path, method: :delete, class: 'btn btn-danger mt-2'
+
+  .row
+    .col-6
+      .d-flex.justify-content-between
+        %h3 Repositories
+
+        .d-flex.justify-content-between.mb-2
+          = button_to "Request sync", request_sync_connections_path, method: :post, class: 'btn btn-primary'
+          = link_to "Configure installation", GithubAppClient.app.html_url, target: "_blank", class: 'ms-2 btn btn-secondary'
+      %ul.list-group
+        - current_user.github_repositories.each do |repo|
+          %li.list-group-item
+            = repo['full_name']
+
+            = link_to repo['html_url'], target: '_blank' do
+              %i.bi.bi-box-arrow-up-right
+    .col-6
+      %p.lead
+        This is the list of repositories to which you granted access.
+        You can configure the installation to add or remove repositories.
+        After that, you can request a sync to update the list.
 - else
   = link_to "Connect to Github", GithubAppClient.url
