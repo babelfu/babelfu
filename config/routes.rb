@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "projects#index"
+
   resources :projects do
     resources :members, only: %i[index], controller: "project_members"
     resources :invitations, only: %i[index new create destroy], controller: "project_invitations"
@@ -26,7 +27,7 @@ Rails.application.routes.draw do
       post :sync
     end
 
-    resources :branches, only: :show do
+    resources :branches, only: [:index, :show] do
       member do
         post :sync
         post :commit_create
@@ -34,7 +35,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :pull_requests, only: :show do
+    resources :pull_requests, only: [:index, :show] do
       member do
         post :sync
         post :commit_create
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
   resource :connections, only: :show do
     get "/github/callback", to: "connections#github_callback"
     delete :disconnect_github
+    post :request_sync
   end
 
   authenticate :user, ->(user) { user.admin? } do

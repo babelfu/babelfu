@@ -1,0 +1,21 @@
+.d-flex.justify-content-between.mb-3.align-items-start
+  .div
+    %nav{"aria-label" => "breadcrumb"}
+      %ol.breadcrumb
+        %li.breadcrumb-item
+          = link_to "Projects", projects_path
+        %li.breadcrumb-item
+          = link_to @project.name, project_path(@project)
+        %li.breadcrumb-item.active{"aria-current" => "page"} Pull Requests
+
+.col-md-6
+  .d-flex.justify-content-between.align-items-end
+  - if @pull_requests.empty?
+    %p No pull requests
+  - else
+    %ul.list-group
+      - @pull_requests.each do |pr|
+        %li.list-group-item.d-flex.justify-content-between.align-items-center
+          = link_to pr.name, project_pull_request_path(@project, pr), class: 'text-decoration-none'
+
+= paginate @pull_requests, theme: 'bootstrap-5'

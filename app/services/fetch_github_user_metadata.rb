@@ -10,7 +10,7 @@ class FetchGithubUserMetadata
   def fetch!
     metadata = user.metadata || user.build_metadata
 
-    metadata.github_user = client.user.to_hash
+    metadata.github_user = client.github_user.to_hash
     metadata.github_installations = client.find_user_installations.installations.map(&:to_hash)
 
     repositories = {}

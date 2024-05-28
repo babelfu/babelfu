@@ -7,6 +7,8 @@ class ProjectsController < ApplicationController
 
   def show
     @project = current_user.projects.find(params[:id])
+    @pull_requests = @project.pull_requests.limit(10).order(updated_at: :desc)
+    @branches = @project.branches.limit(10).order(updated_at: :desc)
   end
 
   def new

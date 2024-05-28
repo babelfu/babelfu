@@ -40,6 +40,10 @@ class PullRequest < ApplicationRecord
   validates :head_branch_name, presence: true
   # validates :repository_id, presence: true TODO: we may want to remove this field
 
+  def name
+    title
+  end
+
   def to_param
     remote_id
   end

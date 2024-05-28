@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module GithubAppClient
+  BadRefreshToken = Class.new(StandardError)
+
   class << self
     def client
       Octokit::Client.new(bearer_token: jwt, client_id:, client_secret:)
@@ -19,7 +21,11 @@ module GithubAppClient
         URI.encode_www_form(params),
         { "Accept" => "application/json" }
       )
-      parse_response(result)
+
+      data = parse_response(result)
+      raise BadRefreshToken, data if data["error"]
+
+      data
     end
 
     def exchange_code(code)

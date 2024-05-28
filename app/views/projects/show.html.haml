@@ -29,12 +29,14 @@
       #{@project.default_branch.translations.select('locale').distinct.count} locales
 .row
   .col-md-6
-    %h2 Pull Requests
-    - if @project.pull_requests.empty?
+    .d-flex.justify-content-between.align-items-end
+      %h2 Pull Requests
+      .pb-1= link_to "see all", project_pull_requests_path(@project)
+    - if @pull_requests.empty?
       %p No pull requests
     - else
       %ul.list-group
-        - @project.pull_requests.each do |pr|
+        - @pull_requests.each do |pr|
           %li.list-group-item.d-flex.justify-content-between.align-items-center
             = link_to pr.title, project_pull_request_path(@project, pr), class: 'text-decoration-none'
             = link_to pr.url, target: '_blank' do
@@ -43,11 +45,13 @@
                 %i.bi.bi-box-arrow-up-right
 
   .col-md-6
-    %h2 Branches
-    - if @project.branches.empty?
+    .d-flex.justify-content-between.align-items-end
+      %h2 Branches
+      .pb-2= link_to "see all", project_branches_path(@project)
+    - if @branches.empty?
       %p No branches
     - else
       %ul.list-group
-        - @project.branches.each do |branch|
+        - @branches.each do |branch|
           %li.list-group-item.d-flex.justify-content-between.align-items-center
             = link_to branch.name, project_branch_path(@project, branch), class: 'text-decoration-none'

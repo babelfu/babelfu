@@ -3,6 +3,10 @@
 class PullRequestsController < ApplicationController
   before_action :find_project
 
+  def index
+    @pull_requests = @project.pull_requests.page(params[:page]).order(updated_at: :desc)
+  end
+
   def show
     @pull_request = @project.pull_requests.find_by(remote_id: params[:id])
 

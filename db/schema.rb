@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_105223) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -218,10 +218,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_105223) do
     t.datetime "updated_at", null: false
     t.string "github_access_token"
     t.string "github_remote_id"
-    t.json "github_repositories"
     t.string "github_refresh_token"
-    t.integer "github_refresh_token_expires_in"
     t.boolean "admin", default: false
+    t.datetime "github_access_token_expires_at"
+    t.datetime "github_refresh_token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
