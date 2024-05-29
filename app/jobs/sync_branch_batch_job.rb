@@ -14,6 +14,9 @@ class SyncBranchBatchJob < ApplicationJob
         end
       end
     end
+  rescue StandardError => e
+    branch.sync_failed!
+    raise e
   end
 
   def self.update_branch!(batch, project, branch_name)
