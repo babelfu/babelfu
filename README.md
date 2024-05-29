@@ -5,7 +5,7 @@
 [Babelfu](https://babelfu.com) is a web service that manages translations for your projects.
 
 As with many other services, the idea is to provide a user-friendly interface to manage translations
-for non-technical people like translators, product managers, etc, without the need to touch code and 
+for non-technical people like translators, product managers, etc, without the need to touch code and
 other extra (but not less important) features.
 
 The critical difference of Babelfu is that it uses GitHub as the source of truth
@@ -24,8 +24,8 @@ the app will commit them on their behalf.
 
 ### Work in progress
 
-This project is a work in progress, but you can already use it to manage translations like the Rails I18n, 
-it supports YAML and JSON formats. 
+This project is a work in progress, but you can already use it to manage translations like the Rails I18n,
+it supports YAML and JSON formats.
 
 A cloud version is available on [babelfu.com](https://babelfu.com), but you can host it yourself if you want.
 
@@ -49,7 +49,7 @@ an email to jose.galisteo.ruiz@gmail.com.
 The project can be configured via built-in Rails credentials (bin/rails credentials:edit) or
 environment variables. The `dot-env` gem loads the environment variables from the `.env` files.
 
-The `Babel::Config` module handles the configuration. 
+The `Babel::Config` module handles the configuration.
 
 #### Active Record Encryption
 
@@ -60,9 +60,7 @@ Save them on the credentials file with `bin/rails credentials:edit` or in the en
 
 Babelfu uses a GitHub App to interact with the GitHub API. You need to create and configure a GitHub App properly.
 
-To create the app, visit [https://github.com/settings/apps] and create a new app.
-
-Set the following configuration:
+Create a [new app]([https://github.com/settings/apps]) on GitHub and set the following configuration:
 
 - Callback URL: http://localhost:3000/connections/github/callback
 - Enable: Expire user authorization tokens

@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       post :sync
     end
 
-    resources :branches, only: [:index, :show] do
+    resources :branches, only: [:index, :show], constraints: { id: %r{[^/]+} } do
       member do
         post :sync
         post :commit_create
