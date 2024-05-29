@@ -17,7 +17,6 @@
 #  reset_password_token            :string
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
-#  github_remote_id                :string
 #
 # Indexes
 #
@@ -25,8 +24,6 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
-  # TODO: check github_remote_id
-
   encrypts :github_access_token
   encrypts :github_refresh_token
 
