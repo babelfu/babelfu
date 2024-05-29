@@ -15,7 +15,6 @@
 #  reset_password_token            :string
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
-#  github_remote_id                :string
 #
 # Indexes
 #

@@ -217,7 +217,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "github_access_token"
-    t.string "github_remote_id"
     t.string "github_refresh_token"
     t.boolean "admin", default: false
     t.datetime "github_access_token_expires_at"
