@@ -24,7 +24,7 @@ class Branch < ApplicationRecord
   include Syncable
   belongs_to :project
 
-  has_many :translations, ->(x) { where(project_id: x.project_id, branch_ref: x.ref) }, foreign_key: :branch_name, primary_key: :name
+  has_many :translations, ->(x) { where("? = ANY (branch_refs)", x.ref) }, foreign_key: :project_id, primary_key: :project_id
   has_one :sync_state, as: :syncable, dependent: :delete
 
   validates :name, presence: true, uniqueness: { scope: :project_id }

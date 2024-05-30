@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_30_143920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -200,11 +200,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.string "locale"
     t.string "key"
     t.string "value"
-    t.string "branch_name"
     t.string "file_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "branch_ref"
+    t.string "branch_refs", default: [], array: true
+    t.index ["project_id", "key", "locale", "value"], name: "index_translations_on_project_id_and_key_and_locale_and_value", unique: true
     t.index ["project_id"], name: "index_translations_on_project_id"
   end
 
