@@ -26,7 +26,7 @@ class Proposal < ApplicationRecord
 
   INNER_JOIN_WITH_CHANGES = <<-SQL.squish
     INNER JOIN branches ON branches.name = proposals.branch_name
-    INNER JOIN translations
+    LEFT JOIN translations
       ON translations.key = proposals.key
      AND translations.locale = proposals.locale
      AND translations.branch_name = proposals.branch_name
