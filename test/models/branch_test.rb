@@ -29,14 +29,14 @@ class BranchTest < ActiveSupport::TestCase
     project1 = Project.create!(remote_repository_id: "user/repo1", default_branch_name: "master")
     project2 = Project.create!(remote_repository_id: "user/repo2", default_branch_name: "master")
 
-    branch11 = project1.branches.create!(name: "master", ref: "11")
-    _branch12 = project1.branches.create!(name: "develop", ref: "12")
-    _branch21 = project2.branches.create!(name: "master", ref: "21")
+    branch11 = project1.branches.create!(name: "master", ref: "master_11")
+    _branch12 = project1.branches.create!(name: "develop", ref: "develop_12")
+    _branch21 = project2.branches.create!(name: "master", ref: "master_21")
 
-    translation111a = project1.translations.create!(branch_name: "master", branch_ref: "11")
-    _translation111b = project1.translations.create!(branch_name: "master", branch_ref: "11b")
-    _translation112 = project1.translations.create!(branch_name: "develop", branch_ref: "12")
-    _translation211 = project2.translations.create!(branch_name: "master", branch_ref: "21")
+    translation111a = project1.translations.create!(branch_refs: ["master_11"])
+    _translation111b = project1.translations.create!(branch_refs: ["master_11b"])
+    _translation112 = project1.translations.create!(branch_refs: ["develop_12"])
+    _translation211 = project2.translations.create!(branch_refs: ["master_21"])
 
     assert_equal [translation111a], branch11.translations
   end
