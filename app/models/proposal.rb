@@ -30,11 +30,14 @@ class Proposal < ApplicationRecord
       ON translations.key = proposals.key
      AND translations.locale = proposals.locale
      AND translations.branch_name = proposals.branch_name
-     AND proposals.value != translations.value
      AND translations.branch_ref = branches.ref
   SQL
 
-  scope :with_changes, -> { joins(INNER_JOIN_WITH_CHANGES).distinct }
+  WHERE_WITH_CHANGES = <<-SQL.squish
+    proposals.value != translations.value OR translations.value IS NULL
+  SQL
+
+  scope :with_changes, -> { joins(INNER_JOIN_WITH_CHANGES).distinct.where(WHERE_WITH_CHANGES) }
 
   def translation
     project.translations.find_by(key: key, locale: locale, branch_name: branch_name, branch_ref: branch_ref)

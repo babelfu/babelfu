@@ -40,6 +40,7 @@ class ProposalTest < ActiveSupport::TestCase
     project = Project.create!(remote_repository_id: "foo/bar")
     project.branches.create!(name: "main", ref: "main_aaa")
     project.translations.create!(key: "hello", value: "Hello", locale: "es", branch_name: "main", branch_ref: "main_aaa")
+    project.translations.create!(key: "bye", value: "Adios", locale: "es", branch_name: "main", branch_ref: "main_aaa")
 
     # A proposal for an existing translation
     proposal1 = project.proposals.create!(key: "hello", value: "Hola", locale: "es", branch_name: "main")
@@ -50,6 +51,9 @@ class ProposalTest < ActiveSupport::TestCase
     # A proposal for a new key in the same locale
     proposal3 = project.proposals.create!(key: "new_key", value: "A new key", locale: "es", branch_name: "main")
 
+    # A proposal with the same value as the existing translation, will not be
+    # considered a change
+    _proposal4 = project.proposals.create!(key: "bye", value: "Adios", locale: "es", branch_name: "main")
     assert_equal [proposal1, proposal2, proposal3], project.proposals.with_changes
   end
 end
