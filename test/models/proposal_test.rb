@@ -35,4 +35,21 @@ class ProposalTest < ActiveSupport::TestCase
     proposal = proposals(:es_bye)
     assert_equal "config/locales/es.yml", proposal.file_path
   end
+
+  test "with_changes scope" do
+    project = Project.create!(remote_repository_id: "foo/bar")
+    project.branches.create!(name: "main", ref: "main_aaa")
+    project.translations.create!(key: "hello", value: "Hello", locale: "es", branch_name: "main", branch_ref: "main_aaa")
+
+    # A proposal for an existing translation
+    proposal1 = project.proposals.create!(key: "hello", value: "Hola", locale: "es", branch_name: "main")
+
+    # proposal for the same key in a different locale
+    proposal2 = project.proposals.create!(key: "hello", value: "hello", locale: "en", branch_name: "main")
+
+    # A proposal for a new key in the same locale
+    proposal3 = project.proposals.create!(key: "new_key", value: "A new key", locale: "es", branch_name: "main")
+
+    assert_equal [proposal1, proposal2, proposal3], project.proposals.with_changes
+  end
 end
