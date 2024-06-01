@@ -14,13 +14,15 @@ because Babelfu changes will appear as a regular commit in your pull requests.
 
 Babelfu fetch the translations from your repository and allows you to edit them;
 the same UI detects changes between the HEAD and BASE branches of your pull requests and display
-the differences accordingly.
-
-Once you are happy with the changes, you can commit them to the pull request base branch.
+the differences accordingly. Once you are happy with the changes, you can commit them to the pull request base branch.
 
 To set up a project, you only need to install the Babelfu GitHub App in your repository and invite
 the users you want to give access to the translations. They don't need a Github account because
 the app will commit them on their behalf.
+
+### Guide
+
+You can [follow this guide](https://github.com/babelfu/babelfu-demo) to see a happy path of the Babelfu main functionality.
 
 ### Work in progress
 
