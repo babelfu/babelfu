@@ -10,11 +10,18 @@
 #  github_access_token            :string
 #  github_access_token_expires_at :datetime
 #  name                           :string
+#  public                         :boolean          default(FALSE)
+#  recognized                     :boolean          default(FALSE), not null
+#  slug                           :string
 #  translations_path              :string
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  installation_id                :string
 #  remote_repository_id           :string
+#
+# Indexes
+#
+#  index_projects_on_slug  (slug) UNIQUE
 #
 class Project < ApplicationRecord
   include Syncable
@@ -36,8 +43,13 @@ class Project < ApplicationRecord
   has_many :commit_tasks, dependent: :delete_all
 
   validates :remote_repository_id, presence: true
+  validates :slug, uniqueness: true, presence: true
 
   broadcasts_refreshes
+
+  def to_param
+    slug
+  end
 
   # START: cosmetic defaults
   # We could get rid of this

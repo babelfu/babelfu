@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_03_212239) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -156,6 +156,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.string "installation_id"
     t.string "github_access_token"
     t.datetime "github_access_token_expires_at"
+    t.string "slug"
+    t.boolean "public", default: false
+    t.boolean "recognized", default: false, null: false
+    t.index ["slug"], name: "index_projects_on_slug", unique: true
   end
 
   create_table "proposals", force: :cascade do |t|

@@ -50,6 +50,6 @@ class BranchesController < ApplicationController
   end
 
   def find_project
-    @project = current_user.projects.find(params[:project_id])
+    @project = current_user.projects.find_by!(slug: params[:project_id])
   end
 end

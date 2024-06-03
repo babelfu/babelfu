@@ -15,16 +15,20 @@ Rails.application.routes.draw do
   root "projects#index"
 
   resources :projects do
+    member do
+      post :sync
+    end
+
+    collection do
+      get :user
+    end
+
     resources :members, only: %i[index], controller: "project_members"
     resources :invitations, only: %i[index new create destroy], controller: "project_invitations"
     resource :accept_invitations, only: [:show], controller: "project_accept_invitations" do
       member do
         post :join
       end
-    end
-
-    member do
-      post :sync
     end
 
     resources :branches, only: [:index, :show], constraints: { id: %r{[^/]+} } do
