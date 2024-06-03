@@ -22,7 +22,7 @@ the app will commit them on their behalf.
 
 ### Guide
 
-You can [follow this guide](https://github.com/babelfu/babelfu-demo) to see a happy path of the Babelfu main functionality.
+You can [follow this guide](https://github.com/babelfu/babelfu-demo) with **a lot of screenshots** to see a happy path of the Babelfu main functionality.
 
 ### Work in progress
 
