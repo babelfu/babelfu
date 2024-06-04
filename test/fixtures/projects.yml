@@ -28,3 +28,4 @@ one:
   default_branch_name: master
   remote_repository_id: "babelfu/demo"
   translations_path: "config/locales"
+  slug: project1

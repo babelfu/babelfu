@@ -45,10 +45,16 @@ class Project < ApplicationRecord
   validates :remote_repository_id, presence: true
   validates :slug, uniqueness: true, presence: true
 
+  before_validation :set_slug, on: :create
+
   broadcasts_refreshes
 
   def to_param
     slug
+  end
+
+  def set_slug
+    self.slug ||= Random.uuid
   end
 
   # START: cosmetic defaults
