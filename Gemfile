@@ -65,6 +65,9 @@ group :development do
   # gem "spring"
   gem "annotate"
   gem "dockerfile-rails", ">= 1.6"
+  gem "guard"
+  gem "guard-minitest"
+  gem "guard-rubocop"
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
 end

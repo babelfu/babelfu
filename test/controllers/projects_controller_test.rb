@@ -4,6 +4,7 @@ require "test_helper"
 
 class ProjectsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+  include ActiveJob::TestHelper
 
   setup do
     @user = users(:one)
@@ -83,14 +84,17 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
   test "POST #create as signed user" do
     sign_in @user
 
-    assert_difference("Project.count") do
-      post projects_url, params: { project: { remote_repository_id: "abc:123" } }
+    assert_enqueued_with(job: SyncProjectJob) do
+      assert_difference("Project.count") do
+        post projects_url, params: { project: { remote_repository_id: "abc:123" } }
+      end
     end
 
     project = Project.last
     project.installation_id = "abc"
     project.remote_repository_id = "123"
 
+    assert project.sync_in_progress?
     assert_redirected_to project_url(project)
   end
 end
