@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class SyncableTest < ActiveSupport::TestCase
-  ActiveRecord::Migration.create_table :dummy_syncable_models, force: true do |t|
-    t.string :name
-    t.timestamps
-  end
-
   def setup
     @model = DummySyncableModel.create
   end
