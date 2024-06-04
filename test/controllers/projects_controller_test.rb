@@ -97,4 +97,99 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert project.sync_in_progress?
     assert_redirected_to project_url(project)
   end
+
+  test "GET #edit as a visitor" do
+    get edit_project_url(@project)
+    assert_redirected_to new_user_session_url
+  end
+
+  test "GET #edit as non member" do
+    sign_in @user
+    get edit_project_url(@project)
+    assert_response :redirect
+  end
+
+  test "GET #edit as a member" do
+    @project.users << @user
+
+    sign_in @user
+    get edit_project_url(@project)
+    assert_response :success
+  end
+
+  test "PATCH #update as a visitor" do
+    patch project_url(@project), params: { project: { name: "New name" } }
+    assert_redirected_to new_user_session_url
+  end
+
+  test "PATCH #update as non member" do
+    sign_in @user
+    patch project_url(@project), params: { project: { name: "New name" } }
+    assert_response :redirect
+  end
+
+  test "PATCH #update as a member" do
+    @project.users << @user
+
+    sign_in @user
+    patch project_url(@project), params: { project: { name: "New name" } }
+    assert_redirected_to project_url(@project)
+  end
+
+  test "DELETE #destroy as a visitor" do
+    delete project_url(@project)
+    assert_redirected_to new_user_session_url
+  end
+
+  test "DELETE #destroy as non member" do
+    sign_in @user
+    delete project_url(@project)
+    assert_response :redirect
+  end
+
+  test "DELETE #destroy as a member" do
+    @project.users << @user
+
+    sign_in @user
+    delete project_url(@project)
+    assert_redirected_to projects_url
+  end
+
+  test "POST #sync as a visitor a private project" do
+    @project.update(public: false)
+
+    post sync_project_url(@project)
+    assert_redirected_to root_url
+  end
+
+  test "POST #sync as a non member a private project" do
+    @project.update(public: false)
+
+    sign_in @user
+    post sync_project_url(@project)
+    assert_redirected_to root_url
+  end
+
+  test "POST #sync as a member a private project" do
+    @project.update(public: false)
+    @project.users << @user
+
+    sign_in @user
+
+    assert_enqueued_with(job: SyncProjectJob) do
+      post sync_project_url(@project)
+    end
+
+    assert_redirected_to project_url(@project)
+  end
+
+  test "POST #sync as a visitor a public project" do
+    @project.update(public: true)
+
+    assert_enqueued_with(job: SyncProjectJob) do
+      post sync_project_url(@project)
+    end
+
+    assert_redirected_to project_url(@project)
+  end
 end

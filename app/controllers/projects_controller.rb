@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[index show]
+  skip_before_action :authenticate_user!, only: %i[index show sync]
   after_action :verify_authorized
 
   def index
@@ -36,6 +36,7 @@ class ProjectsController < ApplicationController
 
   def edit
     find_project
+    authorize @project
   end
 
   def create
@@ -56,6 +57,8 @@ class ProjectsController < ApplicationController
 
   def update
     find_project
+    authorize @project
+
     if @project.update(project_params)
       @project.enqueue_sync_data!
       redirect_to project_path(@project), notice: "Project was successfully updated."
@@ -66,6 +69,8 @@ class ProjectsController < ApplicationController
 
   def destroy
     find_project
+    authorize @project
+
     @project&.destroy
     redirect_to projects_path, notice: "Project was successfully destroyed."
   end

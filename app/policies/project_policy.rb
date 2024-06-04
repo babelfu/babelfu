@@ -36,6 +36,10 @@ class ProjectPolicy
     edit_action_check
   end
 
+  def update?
+    edit_action_check
+  end
+
   def destroy?
     edit_action_check
   end
