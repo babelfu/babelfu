@@ -22,4 +22,12 @@
 #
 class MetadataUser < ApplicationRecord
   belongs_to :user
+
+  def github_repositories
+    super || {}
+  end
+
+  def github_user
+    super || {}
+  end
 end

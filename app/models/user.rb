@@ -35,6 +35,7 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :delete_all
   has_many :projects, through: :memberships
   has_one :metadata, class_name: "MetadataUser", dependent: :destroy
+  lazy_has_one :metadata
 
   def stream_connections_id
     "connections:#{id}"

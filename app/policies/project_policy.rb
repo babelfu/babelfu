@@ -28,6 +28,10 @@ class ProjectPolicy
     user.present?
   end
 
+  def create?
+    user.present?
+  end
+
   def edit?
     edit_action_check
   end

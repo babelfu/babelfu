@@ -25,7 +25,6 @@
 #
 class Project < ApplicationRecord
   include Syncable
-  include LazyHasOne
 
   encrypts :github_access_token
 

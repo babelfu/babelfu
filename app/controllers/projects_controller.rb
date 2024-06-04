@@ -39,6 +39,7 @@ class ProjectsController < ApplicationController
   end
 
   def create
+    authorize Project
     installation_id, remote_repository_id = params[:project][:remote_repository_id].split(":")
     @project = current_user.projects.build(project_params)
     @project.installation_id = installation_id
