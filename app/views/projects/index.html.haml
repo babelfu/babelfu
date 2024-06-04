@@ -4,6 +4,20 @@
     - if policy(Project).new?
       = link_to 'New Project', new_project_path
 
+- @projects.each do |project|
+  .card.mb-3
+    .card-body
+      %h5.card-title= project.remote_repository_id
+      %p.card-text
+        %strong Total keys:
+        = project.stats.total_keys
+        %br
+        %strong Locales:
+        %ul.list-unstyled
+          - project.stats.locales.each do |locale_stats|
+            %li= "#{locale_stats.locale}: #{locale_stats.percent_translated * 100}%"
+
+
 %table.table
   %thead
     %tr

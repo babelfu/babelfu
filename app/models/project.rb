@@ -75,6 +75,10 @@ class Project < ApplicationRecord
     @client ||= ProjectClient.new(self)
   end
 
+  def stats
+    @stats ||= ProjectStats.new(self)
+  end
+
   def url
     File.join(Babelfu.config.github_domain, remote_repository_id)
   end
