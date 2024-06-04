@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 class BranchesController < ApplicationController
+  skip_before_action :authenticate_user!
   before_action :find_project
+  after_action :verify_authorized
 
   def index
+    authorize @project
     @branches = @project.branches.page(params[:page]).order(updated_at: :desc)
   end
 
   def show
     find_branch
+    authorize @project
 
     @translations_presenter = TranslationsPresenter.new(@project,
                                                         branch_name: @branch.name,
@@ -17,18 +21,21 @@ class BranchesController < ApplicationController
 
   def sync
     find_branch
+    authorize @project
 
     @branch.enqueue_sync!
   end
 
   def commits
     find_branch
+    authorize @project, :commit_create?
     @commits_presenter = CommitsPresenter.new(project: @project, branch_name: @branch.name)
   end
 
   # TODO: DRY this up with pull requests controller
   def commit_create
     find_branch
+    authorize @project
 
     @commit_task = @project.commit_tasks.build
     @commit_task.branch_name = @branch.name
@@ -50,6 +57,6 @@ class BranchesController < ApplicationController
   end
 
   def find_project
-    @project = current_user.projects.find_by!(slug: params[:project_id])
+    @project = Project.find_by!(slug: params[:project_id])
   end
 end

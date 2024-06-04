@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 class PullRequestsController < ApplicationController
+  skip_before_action :authenticate_user!
   before_action :find_project
+  after_action :verify_authorized
 
   def index
+    authorize @project
     @pull_requests = @project.pull_requests.page(params[:page]).order(updated_at: :desc)
   end
 
   def show
-    @pull_request = @project.pull_requests.find_by(remote_id: params[:id])
+    authorize @project
+    find_pull_request
 
     @translations_presenter = TranslationsPresenter.new(@project,
                                                         branch_name: @pull_request.head_branch_name,
@@ -17,6 +21,7 @@ class PullRequestsController < ApplicationController
   end
 
   def sync
+    authorize @project
     find_pull_request
 
     @pull_request.enqueue_sync!
@@ -24,6 +29,7 @@ class PullRequestsController < ApplicationController
 
   # TODO: DRY this up with branches controller
   def commit_create
+    authorize @project
     find_pull_request
 
     @commit_task = @project.commit_tasks.build
@@ -40,6 +46,7 @@ class PullRequestsController < ApplicationController
   end
 
   def commits
+    authorize @project, :commit_create?
     find_pull_request
 
     @commits_presenter = CommitsPresenter.new(project: @project, branch_name: @pull_request.head_branch_name)
@@ -52,6 +59,6 @@ class PullRequestsController < ApplicationController
   end
 
   def find_project
-    @project = current_user.projects.find_by!(slug: params[:project_id])
+    @project = Project.find_by!(slug: params[:project_id])
   end
 end

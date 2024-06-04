@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BaseTranslationsComponent < ViewComponent::Base
+  include Pundit::Authorization
+
   def filter_path
     raise NotImplementedError
   end

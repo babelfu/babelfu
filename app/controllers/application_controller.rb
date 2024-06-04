@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+
   before_action :authenticate_user!
+
+  before_action :initialize_component_context
+  def initialize_component_context
+    Current.user = current_user
+  end
+
 
   private
 

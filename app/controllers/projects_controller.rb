@@ -1,31 +1,35 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  # TODO: add authorization layer for private projects
   skip_before_action :authenticate_user!, only: %i[index show]
+  after_action :verify_authorized
 
   def index
+    authorize Project
     @projects = Project.where(public: true, recognized: true).page(params[:page])
   end
 
   def user
+    authorize Project
     @projects = current_user.projects.page(params[:page])
-    render :index
   end
 
   def show
     find_project
+    authorize @project
     @pull_requests = @project.pull_requests.limit(10).order(updated_at: :desc)
     @branches = @project.branches.limit(10).order(updated_at: :desc)
   end
 
   def new
+    authorize Project
     redirect_to connections_path, alert: "You need to connect to GitHub first." if current_user.github_access_token.blank?
     @project = current_user.projects.build
   end
 
   def sync
     find_project
+    authorize @project
     @project.enqueue_sync_data!
     redirect_to project_path(@project), notice: "Project is being synced."
   end
@@ -68,7 +72,7 @@ class ProjectsController < ApplicationController
   private
 
   def find_project
-    @project = current_user.projects.find_by!(slug: params[:id])
+    @project = Project.find_by!(slug: params[:id])
   end
 
   def project_params
