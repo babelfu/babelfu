@@ -9,46 +9,38 @@
     .card-header
       .d-flex.justify-content-between.align-items-center
         = link_to project.remote_repository_id, project_path(project)
-        - if project.public?
-          %span.badge.bg-primary
-            Public
-        - else
-          %span.badge.bg-danger
-            Private
+        %span
+          .d-flex.justify-content-between.align-items-center
+            - if project.public?
+              %span.badge.bg-primary
+                Public
+            - else
+              %span.badge.bg-danger
+                Private
+            .ms-2
+              = render GithubLinkComponent.new(project.url)
     .card-body
       .d-flex.justify-content-between
-        .keys
-          %strong Keys:
-          = project.stats.total_keys
-        .percent-translated
-          %strong Percent Translated:
-          = "#{project.stats.total_percent_translated.ceil}%"
-      %br
-      %table.table
-        %thead
-          %tr
-            %th Locale
-            %th Percent Translated
-        %tbody
+        .data
+          .keys
+            %strong Keys:
+            = project.stats.total_keys
+          .percent-translated
+            %strong Done:
+            = "#{project.stats.total_percent_translated.ceil}%"
+          .locales
+            %strong Locales:
+            = project.stats.locales.count
+        .actions
+          = link_to "edit", edit_project_path(project), class: 'btn btn-sm btn-outline-primary' if policy(project).edit?
+      .container.mt-3
+        .row.row-cols-xl-5.row-cols-lg-4.row-cols-md-3.row-cols-2
           - project.stats.locales.each do |locale_stats|
-            %tr
-              %td= locale_stats.locale
-              %td= "#{locale_stats.percent_translated.ceil}%"
-
-
-%table.table
-  %thead
-    %tr
-      %th ID
-      %th Name
-      %th Actions
-  %tbody
-    - @projects.each do |project|
-      %tr
-        %td= project.id
-        %td= link_to project.remote_repository_id, project_path(project)
-        %td
-          = link_to "edit", edit_project_path(project) if policy(project).edit?
-          = link_to "delete", project, "data-turbo-method": "delete", "data-turbo-confirm": "Are you sure?" if policy(project).destroy?
-
+            .col
+              .border.border-2.rounded-3.p-2.m-1
+                %small= locale_stats.locale.upcase
+                .progress{"aria-label" => "Progress completed #{locale_stats.locale}", "aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => locale_stats.percent_translated.ceil, :role => "progressbar", :style => "height: 1px"}
+                  .progress-bar{:style => "width: #{locale_stats.percent_translated.ceil}%"}
+                %small
+                  = "DONE #{locale_stats.percent_translated.ceil} %"
 = paginate @projects, theme: 'bootstrap-5'
