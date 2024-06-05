@@ -82,6 +82,6 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:name, :remote_repository_id, :default_locale, :translations_path)
+    params.require(:project).permit(:name, :remote_repository_id, :default_locale, :translations_path, :public)
   end
 end
