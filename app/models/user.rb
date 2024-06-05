@@ -99,4 +99,8 @@ class User < ApplicationRecord
       mapping
     end
   end
+
+  def admin!
+    update!(admin: true)
+  end
 end

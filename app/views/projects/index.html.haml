@@ -6,16 +6,34 @@
 
 - @projects.each do |project|
   .card.mb-3
+    .card-header
+      .d-flex.justify-content-between.align-items-center
+        = link_to project.remote_repository_id, project_path(project)
+        - if project.public?
+          %span.badge.bg-primary
+            Public
+        - else
+          %span.badge.bg-danger
+            Private
     .card-body
-      %h5.card-title= project.remote_repository_id
-      %p.card-text
-        %strong Total keys:
-        = project.stats.total_keys
-        %br
-        %strong Locales:
-        %ul.list-unstyled
+      .d-flex.justify-content-between
+        .keys
+          %strong Keys:
+          = project.stats.total_keys
+        .percent-translated
+          %strong Percent Translated:
+          = "#{project.stats.total_percent_translated.ceil}%"
+      %br
+      %table.table
+        %thead
+          %tr
+            %th Locale
+            %th Percent Translated
+        %tbody
           - project.stats.locales.each do |locale_stats|
-            %li= "#{locale_stats.locale}: #{locale_stats.percent_translated * 100}%"
+            %tr
+              %td= locale_stats.locale
+              %td= "#{locale_stats.percent_translated.ceil}%"
 
 
 %table.table

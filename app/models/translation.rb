@@ -17,7 +17,8 @@
 #
 # Indexes
 #
-#  index_translations_on_project_id  (project_id)
+#  idx_on_project_id_key_locale_branch_ref_c865b90c88  (project_id,key,locale,branch_ref) UNIQUE
+#  index_translations_on_project_id                    (project_id)
 #
 # Foreign Keys
 #

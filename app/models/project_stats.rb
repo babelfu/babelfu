@@ -9,7 +9,21 @@ class ProjectStats
   end
 
   def locales
-    @locales ||= @default_branch.translations.pluck(:locale).uniq.map { |locale| LocaleStats.new(self, locale) }
+    @locales ||= @default_branch.translations.pluck(:locale).uniq.map { |locale| LocaleStats.new(self, locale) }.sort_by{|x| [x.percent_translated, x.locale]}.reverse
+  end
+
+  def total_percent_translated
+    return 0 if total_translations.zero?
+
+    (1 - (expected_translations - total_translations) / total_translations.to_f) * 100
+  end
+
+  def total_translations
+    @total_translations ||= @default_branch.translations.count
+  end
+
+  def expected_translations
+    locales.count * keys.count
   end
 
   class LocaleStats
@@ -21,7 +35,7 @@ class ProjectStats
     end
 
     def percent_translated
-      stats.default_branch.translations.where(locale: locale).pluck(:key).uniq.count / stats.total_keys.to_f
+      stats.default_branch.translations.where(locale: locale).pluck(:key).uniq.count / stats.total_keys.to_f * 100
     end
   end
 

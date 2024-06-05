@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema[7.1].define(version: 2024_06_03_212239) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2024_06_05_133759) do
+>>>>>>> Stashed changes
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -209,6 +213,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_03_212239) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "branch_ref"
+    t.index ["project_id", "key", "locale", "branch_ref"], name: "idx_on_project_id_key_locale_branch_ref_c865b90c88", unique: true
     t.index ["project_id"], name: "index_translations_on_project_id"
   end
 

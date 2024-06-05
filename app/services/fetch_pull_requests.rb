@@ -11,8 +11,7 @@ class FetchPullRequests
     remote_pull_requests = client.pull_requests(state: "open")
 
     remote_pull_requests.each do |data|
-      pr = UpsertPullRequestFromGithubDataService.call(project, data)
-      pr.enqueue_sync!
+      UpsertPullRequestFromGithubDataService.call(project, data)
     end
 
     # TODO: what to do with closed pull requests?
