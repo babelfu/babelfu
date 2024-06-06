@@ -9,6 +9,9 @@ class SyncProjectJob < ApplicationJob
     data = client.repository
     attrs = { default_branch_name: data.default_branch }
     project.update!(attrs)
+    metadata = project.metadata
+    metadata.github_collaborators = client.collaborators.map(&:to_hash)
+    metadata.save!
 
     project.default_branch!.enqueue_sync!
     FetchBranches.new(project).fetch!

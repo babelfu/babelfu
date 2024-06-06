@@ -2,8 +2,10 @@
 
 class ProjectMembersController < ApplicationController
   before_action :find_project
+  after_action :verify_authorized
 
   def index
+    authorize @project, :list_members?
     @users = @project.users.page(params[:page])
   end
 

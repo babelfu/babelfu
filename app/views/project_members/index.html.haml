@@ -10,16 +10,28 @@
   .links
     = link_to "Invitations", project_invitations_path(@project)
 
-%table.table.table-hover
-  %thead
-    %tr
-      %th Email
-      %th Github Username
-  %tbody
-    - @users.each do |user|
-      %tr
-        %td= user.email
-        %td= user.github_username
+.row
+  .col-6
+    %table.table.table-hover
+      %thead
+        %tr
+          %th Email
+          %th Github Username
+      %tbody
+        - @users.each do |user|
+          %tr
+            %td= user.email
+            %td= user.github_username
 
 
-= paginate @users, theme: 'bootstrap-5'
+    = paginate @users, theme: 'bootstrap-5'
+  .col-6
+    %p.lead
+      This is a list of all the members that can access to this project independently of their access level on
+      the repository.
+    %p.lead
+      Additionally collaborators of the repository will be able to access and edit translations to the repository.
+    %p.lead
+      You can configure this behavoir on the
+      = link_to "project settings", edit_project_path(@project)
+      \.

@@ -26,6 +26,10 @@ class UserClient < BaseClient
 
   private
 
+  api_wrapper def _repos
+    client.repos
+  end
+
   api_wrapper def _find_installation_repositories_for_user(installation_id)
     client.find_installation_repositories_for_user(installation_id)
   end

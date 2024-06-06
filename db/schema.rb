@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_05_133759) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_06_100153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -125,6 +125,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_05_133759) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
+  create_table "metadata_projects", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.json "github_collaborators", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_metadata_projects_on_project_id"
+  end
+
   create_table "metadata_users", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.json "github_repositories"
@@ -159,6 +167,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_05_133759) do
     t.string "slug"
     t.boolean "public", default: false
     t.boolean "recognized", default: false, null: false
+    t.boolean "allow_remote_contributors", default: false, null: false
     t.index ["slug"], name: "index_projects_on_slug", unique: true
   end
 
@@ -234,6 +243,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_05_133759) do
   add_foreign_key "commit_tasks", "projects"
   add_foreign_key "memberships", "projects"
   add_foreign_key "memberships", "users"
+  add_foreign_key "metadata_projects", "projects"
   add_foreign_key "metadata_users", "users"
   add_foreign_key "project_invitations", "projects"
   add_foreign_key "proposals", "projects"

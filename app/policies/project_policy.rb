@@ -48,10 +48,18 @@ class ProjectPolicy
     edit_action_check
   end
 
+  def list_members?
+    user.present? && project.users.include?(user)
+  end
+
   private
 
   def edit_action_check
-    user.present? && project.users.include?(user)
+    user.present? && (project.users.include?(user) || check_project_collaborator)
+  end
+
+  def check_project_collaborator
+    project.allow_remote_contributors? && project.collaborator?(user)
   end
 
   def read_only_action_check

@@ -41,10 +41,7 @@ class ProjectsController < ApplicationController
 
   def create
     authorize Project
-    installation_id, remote_repository_id = params[:project][:remote_repository_id].split(":")
     @project = current_user.projects.build(project_params)
-    @project.installation_id = installation_id
-    @project.remote_repository_id = remote_repository_id
     @project.slug = Random.uuid
     if @project.save
       current_user.projects << @project
@@ -82,6 +79,6 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:name, :remote_repository_id, :default_locale, :translations_path, :public)
+    params.require(:project).permit(:name, :remote_repository_id, :installation_remote_repository_id, :default_locale, :translations_path, :public, :allow_remote_contributors)
   end
 end

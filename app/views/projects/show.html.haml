@@ -15,7 +15,7 @@
   %h1.fs-3.mb-0= @project.name
   .links
     = link_to "edit", edit_project_path(@project) if policy(@project).edit?
-    = link_to "members", project_members_path(@project) # TODO: policy
+    = link_to "members", project_members_path(@project) if policy(@project).list_members?
 
 - if @project.default_branch
   %div.mb-3.pt-1

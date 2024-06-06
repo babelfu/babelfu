@@ -55,6 +55,10 @@ class ProjectClient < BaseClient
     client.update_ref(repo_id, ref, sha)
   end
 
+  api_wrapper def _collaborators
+    client.collaborators(repo_id)
+  end
+
   private
 
   def repo_id

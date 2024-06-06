@@ -5,6 +5,7 @@
 # Table name: projects
 #
 #  id                             :bigint           not null, primary key
+#  allow_remote_contributors      :boolean          default(FALSE), not null
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
@@ -28,6 +29,9 @@ class Project < ApplicationRecord
 
   encrypts :github_access_token
 
+  has_one :metadata, class_name: "MetadataProject", dependent: :delete
+  lazy_has_one :metadata
+
   has_many :invitations, class_name: "ProjectInvitation", dependent: :delete_all
   has_many :memberships, dependent: :delete_all
   has_many :users, through: :memberships
@@ -47,6 +51,14 @@ class Project < ApplicationRecord
   before_validation :set_slug, on: :create
 
   broadcasts_refreshes
+
+  def installation_remote_repository_id
+    [installation_id, remote_repository_id].join(":")
+  end
+
+  def installation_remote_repository_id=(value)
+    self.installation_id, self.remote_repository_id = value.split(":")
+  end
 
   def to_param
     slug
@@ -86,5 +98,9 @@ class Project < ApplicationRecord
   def enqueue_sync_data!
     sync_in_progress!
     SyncProjectJob.perform_later(self)
+  end
+
+  def collaborator?(user)
+    metadata.github_collaborators.any? { |c| c["login"] == user.github_username && c.dig("permissions", "push") }
   end
 end

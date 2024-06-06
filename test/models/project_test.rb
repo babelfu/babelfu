@@ -5,6 +5,7 @@
 # Table name: projects
 #
 #  id                             :bigint           not null, primary key
+#  allow_remote_contributors      :boolean          default(FALSE), not null
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
@@ -27,6 +28,25 @@ require "test_helper"
 
 class ProjectTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+
+  test "#collaborator?" do
+    project = projects(:one)
+
+    github_collaborators = [
+      { login: "user1", permissions: { "push" => true } },
+      { login: "user2", permissions: { "push" => false } }
+    ]
+
+    project.metadata.update!(github_collaborators: github_collaborators)
+
+    user1 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user1" }))
+    user2 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user2" }))
+    user3 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user3" }))
+
+    assert project.collaborator?(user1)
+    assert_not project.collaborator?(user2)
+    assert_not project.collaborator?(user3)
+  end
 
   test "#default_branch when the name exist but the branch doesn't" do
     project = Project.create(remote_repository_id: "user/repo", default_branch_name: "master")
