@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
-class BaseClient
-  include ClientToken
+module ApiWrapper
+  extend ActiveSupport::Concern
 
   RequestError = Class.new(StandardError)
 
-  class << self
+  delegate :client, :build_client, to: :authentication
+
+  def authentication
+    raise NotImplementedError
+  end
+
+  class_methods do
     def api_wrapper(original_method_name)
       raise ArgumentError, "Method name must start with _" unless original_method_name.start_with?("_")
 
@@ -30,9 +36,5 @@ class BaseClient
         end
       end
     end
-  end
-
-  def client
-    @client || build_client
   end
 end

@@ -118,10 +118,6 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal "#{Babelfu.config.github_domain}/user/repo", project.url
   end
 
-  test "#client" do
-    assert_instance_of ProjectClient, projects(:one).client
-  end
-
   test "#enqueue_sync_data!" do
     project = projects(:one)
     assert_enqueued_with(job: SyncProjectJob) do

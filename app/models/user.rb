@@ -50,7 +50,11 @@ class User < ApplicationRecord
   end
 
   def client
-    @client ||= UserClient.new(self)
+    @client ||= UserGithubClientProxy.new(self)
+  end
+
+  def authentication
+    @authentication ||= UserGithubAuthentication.new(self)
   end
 
   def save_github_access_token!(token)

@@ -4,7 +4,6 @@ import Translations from "../components/Translations.svelte";
 export default class extends Controller {
   connect() {
     const target = this.element;
-    debugger
     new Translations({
       target: target,
       props: {

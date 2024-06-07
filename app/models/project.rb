@@ -84,7 +84,15 @@ class Project < ApplicationRecord
   end
 
   def client
-    @client ||= ProjectClient.new(self)
+    @client ||= ProjectGithubClientProxy.new(self, authentication)
+  end
+
+  def authentication
+    @authentication ||= if installation_id
+                          InstallationGithubAuthentication.new(self)
+                        else
+                          UserGithubAuthentication.new(users.first)
+                        end
   end
 
   def stats

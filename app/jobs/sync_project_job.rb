@@ -10,7 +10,7 @@ class SyncProjectJob < ApplicationJob
     attrs = { default_branch_name: data.default_branch }
     project.update!(attrs)
     metadata = project.metadata
-    metadata.github_collaborators = client.collaborators.map(&:to_hash)
+    metadata.github_collaborators = client.collaborators.map(&:to_hash) if project.installation_id.present?
     metadata.save!
 
     project.default_branch!.enqueue_sync!

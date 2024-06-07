@@ -3,6 +3,8 @@
 module ClientToken
   MAX_TIME_TO_WAIT_FOR_LOCK = 2
 
+  attr_reader :client
+
   def build_client(force: false)
     @client = Octokit::Client.new(access_token: fetch_access_token!(force:))
   end
