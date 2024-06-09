@@ -72,12 +72,7 @@ class User < ApplicationRecord
       self.github_refresh_token = nil
       self.github_refresh_token_expires_at = nil
       save!
-      if metadata
-        metadata.github_repositories = nil
-        metadata.github_installations = nil
-        metadata.github_user = nil
-        metadata.save!
-      end
+      metadata&.reset_github_metadata!
     end
   end
 

@@ -5,9 +5,9 @@
 # Table name: metadata_users
 #
 #  id                   :bigint           not null, primary key
-#  github_installations :json
-#  github_repositories  :json
-#  github_user          :json
+#  github_installations :json             not null
+#  github_repositories  :json             not null
+#  github_user          :json             not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  user_id              :bigint           not null
@@ -23,11 +23,7 @@
 class MetadataUser < ApplicationRecord
   belongs_to :user
 
-  def github_repositories
-    super || {}
-  end
-
-  def github_user
-    super || {}
+  def reset_github_metadata!
+    update!(github_user: {}, github_repositories: {}, github_installations: [])
   end
 end
