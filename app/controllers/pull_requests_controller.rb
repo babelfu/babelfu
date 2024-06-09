@@ -6,12 +6,12 @@ class PullRequestsController < ApplicationController
   after_action :verify_authorized
 
   def index
-    authorize @project
+    authorize @project, :explore?
     @pull_requests = @project.pull_requests.page(params[:page]).order(updated_at: :desc)
   end
 
   def show
-    authorize @project
+    authorize @project, :explore?
     find_pull_request
 
     @translations_presenter = TranslationsPresenter.new(@project,
@@ -21,7 +21,7 @@ class PullRequestsController < ApplicationController
   end
 
   def sync
-    authorize @project
+    authorize @project, :sync?
     find_pull_request
 
     @pull_request.enqueue_sync!
@@ -29,7 +29,7 @@ class PullRequestsController < ApplicationController
 
   # TODO: DRY this up with branches controller
   def commit_create
-    authorize @project
+    authorize @project, :commit?
     find_pull_request
 
     @commit_task = @project.commit_tasks.build
@@ -46,7 +46,7 @@ class PullRequestsController < ApplicationController
   end
 
   def commits
-    authorize @project, :commit_create?
+    authorize @project, :commit?
     find_pull_request
 
     @commits_presenter = CommitsPresenter.new(project: @project, branch_name: @pull_request.head_branch_name)

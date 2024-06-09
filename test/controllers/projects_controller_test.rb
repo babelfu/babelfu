@@ -77,7 +77,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "POST #create as a visitor" do
-    post projects_url, params: { project: { remote_repository_id: "abc:123" } }
+    post projects_url, params: { project: { installation_remote_repository_id: "abc:123" } }
     assert_redirected_to new_user_session_url
   end
 
@@ -86,7 +86,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     assert_enqueued_with(job: SyncProjectJob) do
       assert_difference("Project.count") do
-        post projects_url, params: { project: { remote_repository_id: "abc:123" } }
+        post projects_url, params: { project: { installation_remote_repository_id: "abc:123" } }
       end
     end
 

@@ -10,8 +10,7 @@
   .col-md-6.col-md-offset-3
     = simple_form_for @project do |f|
       = f.input :name
-      -# = f.input :installation_remote_repository_id, collection: current_user.github_remote_repositories_for_select, label: "Github Repository", prompt: "Select a repository", hint: connect_to_github_message
-      = f.input :remote_repository_id
+      = f.input :installation_remote_repository_id, collection: current_user.github_remote_repositories_for_select, label: "Github Repository", hint: connect_to_github_message
       = f.input :default_locale
       = f.input :translations_path, hint: "Path to the translations files", placeholder: "config/locales"
       = f.input :public, as: :boolean, hint: "If the project is public, it will be visible to everyone"

@@ -1,7 +1,7 @@
 .d-flex.justify-content-between.align-items-center
   %h1 Projects
   .actions.d-flex.flex-row.align-items-end
-    - if policy(Project).new?
+    - if policy(Project).create?
       = link_to 'New Project', new_project_path
 
 - @projects.each do |project|
@@ -32,7 +32,7 @@
             %strong Locales:
             = project.stats.locales.count
         .actions
-          = link_to "edit", edit_project_path(project), class: 'btn btn-sm btn-outline-primary' if policy(project).edit?
+          = link_to "edit", edit_project_path(project), class: 'btn btn-sm btn-outline-primary' if policy(project).update?
       .container.mt-3
         .row.row-cols-xl-5.row-cols-lg-4.row-cols-md-3.row-cols-2
           - project.stats.locales.each do |locale_stats|

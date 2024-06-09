@@ -17,52 +17,44 @@ class ProjectPolicy
   end
 
   def sync?
-    read_only_action_check
+    explore?
   end
 
-  def show?
-    read_only_action_check
+  def propose?
+    project_member? || check_project_collaborator
   end
 
-  def new?
-    user.present?
+  def explore?
+    project.public? || project_member? || check_project_collaborator
   end
 
   def create?
     user.present?
   end
 
-  def edit?
-    edit_action_check
-  end
-
   def update?
-    edit_action_check
+    project_member?
   end
 
   def destroy?
-    edit_action_check
+    project_member?
   end
 
-  def commit_create?
-    edit_action_check
+  def commit?
+    project_member? || check_project_collaborator
   end
 
   def list_members?
-    user.present? && project.users.include?(user)
+    project_member?
   end
 
   private
 
-  def edit_action_check
-    user.present? && (project.users.include?(user) || check_project_collaborator)
+  def project_member?
+    user && project.users.include?(user)
   end
 
   def check_project_collaborator
-    project.allow_remote_contributors? && project.collaborator?(user)
-  end
-
-  def read_only_action_check
-    project.public? || project.users.include?(user)
+    user && project.allow_remote_contributors? && project.collaborator?(user)
   end
 end

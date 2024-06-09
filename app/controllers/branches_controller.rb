@@ -6,13 +6,13 @@ class BranchesController < ApplicationController
   after_action :verify_authorized
 
   def index
-    authorize @project
+    authorize @project, :explore?
     @branches = @project.branches.page(params[:page]).order(updated_at: :desc)
   end
 
   def show
     find_branch
-    authorize @project
+    authorize @project, :explore?
 
     @translations_presenter = TranslationsPresenter.new(@project,
                                                         branch_name: @branch.name,
@@ -21,21 +21,21 @@ class BranchesController < ApplicationController
 
   def sync
     find_branch
-    authorize @project
+    authorize @project, :sync?
 
     @branch.enqueue_sync!
   end
 
   def commits
     find_branch
-    authorize @project, :commit_create?
+    authorize @project, :commit?
     @commits_presenter = CommitsPresenter.new(project: @project, branch_name: @branch.name)
   end
 
   # TODO: DRY this up with pull requests controller
   def commit_create
     find_branch
-    authorize @project
+    authorize @project, :commit?
 
     @commit_task = @project.commit_tasks.build
     @commit_task.branch_name = @branch.name

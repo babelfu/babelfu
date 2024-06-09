@@ -1,7 +1,7 @@
 .d-flex.justify-content-between.align-items-center
   %h1 Projects
   .actions.d-flex.flex-row.align-items-end
-    - if policy(Project).new?
+    - if policy(Project).create?
       = link_to 'New Project', new_project_path
 
 %table.table
@@ -14,7 +14,7 @@
       %tr
         %td= link_to project.remote_repository_id, project_path(project)
         %td
-          = link_to "edit", edit_project_path(project) if policy(project).edit?
+          = link_to "edit", edit_project_path(project) if policy(project).update?
           = link_to "delete", project, "data-turbo-method": "delete", "data-turbo-confirm": "Are you sure?" if policy(project).destroy?
 
 = paginate @projects, theme: 'bootstrap-5'

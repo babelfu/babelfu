@@ -16,31 +16,24 @@ class ProjectsController < ApplicationController
 
   def show
     find_project
-    authorize @project
+    authorize @project, :explore?
     @pull_requests = @project.pull_requests.limit(10).order(updated_at: :desc)
     @branches = @project.branches.limit(10).order(updated_at: :desc)
   end
 
   def new
-    authorize Project
+    authorize Project, :create?
     redirect_to connections_path, alert: "You need to connect to GitHub first." if current_user.github_access_token.blank?
     @project = current_user.projects.build
   end
 
-  def sync
-    find_project
-    authorize @project
-    @project.enqueue_sync_data!
-    redirect_to project_path(@project), notice: "Project is being synced."
-  end
-
   def edit
     find_project
-    authorize @project
+    authorize @project, :update?
   end
 
   def create
-    authorize Project
+    authorize Project, :create?
     @project = current_user.projects.build(project_params)
     @project.slug = Random.uuid
     if @project.save
@@ -52,9 +45,16 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def sync
+    find_project
+    authorize @project, :sync?
+    @project.enqueue_sync_data!
+    redirect_to project_path(@project), notice: "Project is being synced."
+  end
+
   def update
     find_project
-    authorize @project
+    authorize @project, :update?
 
     if @project.update(project_params)
       @project.enqueue_sync_data!
@@ -79,6 +79,6 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:name, :remote_repository_id, :installation_remote_repository_id, :default_locale, :translations_path, :public, :allow_remote_contributors)
+    params.require(:project).permit(:name, :installation_remote_repository_id, :default_locale, :translations_path, :public, :allow_remote_contributors)
   end
 end

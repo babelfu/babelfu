@@ -91,6 +91,9 @@ class Project < ApplicationRecord
     @authentication ||= if installation_id
                           InstallationGithubAuthentication.new(self)
                         else
+                          # TODO: we should probably not use the first user
+                          # but the owner of the project.
+                          # This is a temporary solution
                           UserGithubAuthentication.new(users.first)
                         end
   end

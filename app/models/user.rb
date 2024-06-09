@@ -77,7 +77,7 @@ class User < ApplicationRecord
   end
 
   def github_remote_repositories_for_select
-    github_remote_repositories.map { |k, v| [v[:repo]["full_name"], k] }
+    [["Select a repository", nil]] + github_remote_repositories.map { |k, v| [v[:repo]["full_name"], k] }
   end
 
   # TODO: improve the namign of this method and the one below

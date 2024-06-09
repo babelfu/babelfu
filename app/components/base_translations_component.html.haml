@@ -27,5 +27,5 @@
       .mt-2
         = paginate @translations_presenter.pagination, theme: 'bootstrap-5'
 
-      %div{data: {controller: "translations", "can-edit" => Pundit.policy(Current.user, project).edit?.to_s, "branch-name" => @translations_presenter.branch_name, "locales" => @translations_presenter.locales, "keys" => @translations_presenter.keys, "matrix" => @translations_presenter.matrix.to_json, "proposals-path" => project_proposals_path(project)}}
+      %div{data: {controller: "translations", "can-edit" => Pundit.policy(Current.user, project).propose?.to_s, "branch-name" => @translations_presenter.branch_name, "locales" => @translations_presenter.locales, "keys" => @translations_presenter.keys, "matrix" => @translations_presenter.matrix.to_json, "proposals-path" => project_proposals_path(project)}}
       = paginate @translations_presenter.pagination, theme: 'bootstrap-5'

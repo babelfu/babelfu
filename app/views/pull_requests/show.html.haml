@@ -12,7 +12,7 @@
       %h1.fs-3.mb-0 Translations
   .actions.d-flex.flex-row.align-items-end
     .me-5= render GithubLinkComponent.new(@pull_request.url)
-    - if policy(@project).commit_create?
+    - if policy(@project).commit?
       = link_to "Commit", commits_project_pull_request_path(@project, @pull_request), class: 'btn btn-primary me-2'
     %div{id: dom_id(@pull_request)}
       = render SyncPullRequestWidgetComponent.new(@pull_request)
