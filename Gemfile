@@ -82,7 +82,6 @@ group :test do
 end
 
 gem "bootstrap5-kaminari-views"
-gem "chartkick"
 gem "devise"
 gem "devise-bootstrap-views"
 gem "dotenv-rails"
