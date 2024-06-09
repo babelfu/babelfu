@@ -24,6 +24,6 @@ class SyncBranchFileJob < ApplicationJob
       item.merge(branch_name: branch_name, branch_ref: branch_ref)
     end
 
-    project.translations.upsert_all(translations)
+    project.translations.upsert_all(translations, unique_by: %i[project_id key locale branch_ref])
   end
 end
