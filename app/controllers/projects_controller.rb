@@ -35,7 +35,6 @@ class ProjectsController < ApplicationController
   def create
     authorize Project, :create?
     @project = current_user.projects.build(project_params)
-    @project.slug = Random.uuid
     if @project.save
       current_user.projects << @project
       @project.enqueue_sync_data!

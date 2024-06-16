@@ -6,6 +6,7 @@
 #
 #  id                             :bigint           not null, primary key
 #  allow_remote_contributors      :boolean          default(FALSE), not null
+#  config_from_repo               :boolean          default(FALSE), not null
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string

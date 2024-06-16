@@ -6,6 +6,7 @@
 #
 #  id                             :bigint           not null, primary key
 #  allow_remote_contributors      :boolean          default(FALSE), not null
+#  config_from_repo               :boolean          default(FALSE), not null
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
@@ -65,7 +66,10 @@ class Project < ApplicationRecord
   end
 
   def set_slug
-    self.slug ||= Random.uuid
+    self.slug ||= begin
+      user, repo = remote_repository_id.split("/")
+      "#{SecureRandom.base36}-github:#{user}:#{repo}"
+    end
   end
 
   # START: cosmetic defaults

@@ -24,7 +24,7 @@ class ProjectGithubClientProxy
     client.branches(repo_id)
   end
 
-  api_wrapper def _contents(path:, ref:)
+  api_wrapper def _contents(path:, ref: nil)
     client.contents(repo_id, path: path, ref: ref)
   end
 

@@ -5,14 +5,8 @@ class SyncProjectJob < ApplicationJob
 
   def perform(project)
     project.sync_in_progress!
-    client = project.client
-    data = client.repository
-    attrs = { default_branch_name: data.default_branch }
-    project.update!(attrs)
-    metadata = project.metadata
-    metadata.github_collaborators = client.collaborators.map(&:to_hash) if project.installation_id.present?
-    metadata.save!
 
+    FetchProjectData.new(project).fetch!
     project.default_branch!.enqueue_sync!
     FetchBranches.new(project).fetch!
     FetchPullRequests.new(project).fetch!
