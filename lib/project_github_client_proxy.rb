@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
-class ProjectClient < BaseClient
-  attr_reader :project
+class ProjectGithubClientProxy
+  include ApiWrapper
 
-  def initialize(project)
+  attr_reader :project, :authentication
+
+  def initialize(project, authentication)
     @project = project
+    @authentication = authentication
   end
+
+  private
 
   api_wrapper def _blob(sha)
     client.blob(repo_id, sha)
@@ -19,7 +24,7 @@ class ProjectClient < BaseClient
     client.branches(repo_id)
   end
 
-  api_wrapper def _contents(path:, ref:)
+  api_wrapper def _contents(path:, ref: nil)
     client.contents(repo_id, path: path, ref: ref)
   end
 
@@ -55,30 +60,11 @@ class ProjectClient < BaseClient
     client.update_ref(repo_id, ref, sha)
   end
 
-  private
+  api_wrapper def _collaborators
+    client.collaborators(repo_id)
+  end
 
   def repo_id
-    @project.remote_repository_id
-  end
-
-  def installation_id
-    @project.installation_id
-  end
-
-  def fetch_access_token_mutex_key
-    "project:#{project.id}:fetch_access_token"
-  end
-
-  def fetch_and_save_access_token!
-    data = GithubAppClient.client.create_app_installation_access_token(installation_id)
-    project.update!(github_access_token: data.token, github_access_token_expires_at: data.expires_at)
-  end
-
-  def access_token
-    project.github_access_token
-  end
-
-  def valid_access_token?
-    project.github_access_token.present? && project.github_access_token_expires_at.present? && project.github_access_token_expires_at > Time.current.utc # The UTC is important
+    project.remote_repository_id
   end
 end

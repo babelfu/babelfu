@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-class UserClient < BaseClient
+class UserGithubAuthentication
+  include ClientToken
   attr_reader :user
 
   def initialize(user)
     @user = user
+    build_client
   end
 
   def fetch_and_save_access_token!
@@ -22,19 +24,5 @@ class UserClient < BaseClient
 
   def access_token
     user.github_access_token
-  end
-
-  private
-
-  api_wrapper def _find_installation_repositories_for_user(installation_id)
-    client.find_installation_repositories_for_user(installation_id)
-  end
-
-  api_wrapper def _find_user_installations
-    client.find_user_installations
-  end
-
-  api_wrapper def _github_user
-    client.user
   end
 end

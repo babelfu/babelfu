@@ -65,6 +65,9 @@ group :development do
   # gem "spring"
   gem "annotate"
   gem "dockerfile-rails", ">= 1.6"
+  gem "guard"
+  gem "guard-minitest"
+  gem "guard-rubocop"
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
 end
@@ -72,6 +75,7 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
+  gem "factory_bot_rails"
   gem "mocha"
   gem "selenium-webdriver"
   gem "simplecov", require: false
@@ -87,7 +91,9 @@ gem "hamlit-rails"
 gem "jwt"
 gem "kaminari"
 gem "octokit"
+gem "pundit"
 gem "simple_form"
+gem "turbo-mount"
 gem "view_component"
 gem "vite_rails"
 gem "with_advisory_lock"

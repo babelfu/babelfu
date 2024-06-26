@@ -26,7 +26,6 @@
 #
 class PullRequest < ApplicationRecord
   include Syncable
-  include LazyHasOne
 
   belongs_to :project
   has_one :base_branch, ->(x) { where(project_id: x.project_id) }, foreign_key: :name, primary_key: :base_branch_name, class_name: "Branch"

@@ -1,0 +1,34 @@
+%h1 Configure #{@project.remote_repository_id}
+
+= link_to "github repo", @project.url
+
+- if @project.setup_status_pending?
+  %p.lead
+    We are fetching the repository information. Try refreshing the page in a few seconds.
+- if @project.setup_status_config_fetched?
+  %dl
+    %dt Default branch
+    %dd= @project.default_branch_name
+    %dt Config on repo available
+    %dd
+      - if @project.config_from_repo.present?
+        = @project.config_from_repo
+        // TODO: check if there is already a recognized project
+        // only one project can be recognized
+
+    %dt Exsiting recognized project
+    %dd
+      - if @project.existing_recognized_repo.present?
+        = link_to @project.remote_repository_id, projects_path(@project.existing_recognized_repo)
+      - else
+        No recognized project found
+
+- if @project.repo_public? && @project.config_from_repo? && @project.existing_recognized_repo.blank?
+  %p.lead
+    This repo is public
+    %br
+    It has a config file
+    %br
+    It is not recognized by any project, so you can make it recognized.
+
+= turbo_mount("ConfigureProject", props: {project: @project.frontend_attrs}, class: "mb-5")

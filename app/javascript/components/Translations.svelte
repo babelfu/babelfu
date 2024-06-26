@@ -6,6 +6,7 @@
   export let locales = [];
   export let keys = [];
   export let matrix = {};
+  export let canEdit = false;
 
   const searchBy = (key) => {
     return () => {
@@ -41,7 +42,11 @@
           <td class="text-end">{locale}</td>
           <td>
             {#if matrix[locale][key] }
-              <LocaleTranslation branchName={branchName} proposalsPath={proposalsPath} key={key} locale={locale} value={matrix[locale][key].value} proposal={matrix[locale][key].proposal} base={matrix[locale][key].base} />
+              {#if canEdit }
+                <LocaleTranslation branchName={branchName} proposalsPath={proposalsPath} key={key} locale={locale} value={matrix[locale][key].value} proposal={matrix[locale][key].proposal} base={matrix[locale][key].base} />
+              {:else }
+                {matrix[locale][key].value}
+              {/if}
         {:else }
           {`${key}, ${locale}`}
           {/if}

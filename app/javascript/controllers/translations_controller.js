@@ -12,6 +12,7 @@ export default class extends Controller {
         matrix: JSON.parse(target.dataset.matrix),
         proposalsPath: target.dataset.proposalsPath,
         branchName: target.dataset.branchName,
+        canEdit: target.dataset.canEdit === "true",
       }
     })
   }

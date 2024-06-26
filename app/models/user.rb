@@ -34,7 +34,8 @@ class User < ApplicationRecord
 
   has_many :memberships, dependent: :delete_all
   has_many :projects, through: :memberships
-  has_one :metadata, class_name: "MetadataUser", dependent: :destroy
+  has_one :metadata, class_name: "MetadataUser", dependent: :delete
+  lazy_has_one :metadata
 
   def stream_connections_id
     "connections:#{id}"
@@ -49,7 +50,11 @@ class User < ApplicationRecord
   end
 
   def client
-    @client ||= UserClient.new(self)
+    @client ||= UserGithubClientProxy.new(self)
+  end
+
+  def authentication
+    @authentication ||= UserGithubAuthentication.new(self)
   end
 
   def save_github_access_token!(token)
@@ -67,17 +72,12 @@ class User < ApplicationRecord
       self.github_refresh_token = nil
       self.github_refresh_token_expires_at = nil
       save!
-      if metadata
-        metadata.github_repositories = nil
-        metadata.github_installations = nil
-        metadata.github_user = nil
-        metadata.save!
-      end
+      metadata&.reset_github_metadata!
     end
   end
 
   def github_remote_repositories_for_select
-    github_remote_repositories.map { |k, v| [v[:repo]["full_name"], k] }
+    [["Select a repository", nil]] + github_remote_repositories.map { |k, v| [v[:repo]["full_name"], k] }
   end
 
   # TODO: improve the namign of this method and the one below
@@ -97,5 +97,9 @@ class User < ApplicationRecord
       end
       mapping
     end
+  end
+
+  def admin!
+    update!(admin: true)
   end
 end

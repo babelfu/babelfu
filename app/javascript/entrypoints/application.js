@@ -37,3 +37,4 @@ const initScripts = () => {
 
 document.addEventListener('turbo:load', initScripts);
 document.addEventListener('turbo:render', initScripts);
+import "../turbo-mount"
