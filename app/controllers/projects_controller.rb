@@ -37,11 +37,17 @@ class ProjectsController < ApplicationController
     @project = current_user.projects.build(project_params)
     if @project.save
       current_user.projects << @project
-      @project.enqueue_sync_data!
-      redirect_to project_path(@project), notice: "Project was successfully created."
+      @project.enqueue_fetch_config!
+      # @project.enqueue_sync_data!
+      redirect_to configure_project_path(@project), notice: "Project was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def configure
+    find_project
+    authorize @project, :update?
   end
 
   def sync

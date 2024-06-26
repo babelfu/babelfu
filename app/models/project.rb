@@ -6,7 +6,7 @@
 #
 #  id                             :bigint           not null, primary key
 #  allow_remote_contributors      :boolean          default(FALSE), not null
-#  config_from_repo               :boolean          default(FALSE), not null
+#  config_from_repo               :json
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
@@ -14,8 +14,11 @@
 #  name                           :string
 #  public                         :boolean          default(FALSE)
 #  recognized                     :boolean          default(FALSE), not null
+#  repo_public                    :boolean          default(FALSE), not null
+#  setup_status                   :integer          default("pending"), not null
 #  slug                           :string
 #  translations_path              :string
+#  use_config_from_repo           :boolean          default(FALSE), not null
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  installation_id                :string
@@ -27,6 +30,8 @@
 #
 class Project < ApplicationRecord
   include Syncable
+
+  enum :setup_status, { pending: 0, config_fetched: 1 }, prefix: true
 
   encrypts :github_access_token
 
@@ -66,9 +71,13 @@ class Project < ApplicationRecord
   end
 
   def set_slug
-    self.slug ||= begin
+    self.slug ||= "#{SecureRandom.base36}-#{slug_for_repo}"
+  end
+
+  def slug_for_repo
+    @slug_for_repo ||= begin
       user, repo = remote_repository_id.split("/")
-      "#{SecureRandom.base36}-github:#{user}:#{repo}"
+      "github:#{user}:#{repo}"
     end
   end
 
@@ -76,15 +85,6 @@ class Project < ApplicationRecord
   # We could get rid of this
   def name
     super.presence || remote_repository_id
-  end
-
-  def default_locale
-    super.presence || "en"
-  end
-
-  # probably we should validate the presence of translations_path
-  def translations_path
-    super.presence || "config/locales"
   end
 
   def client
@@ -110,6 +110,14 @@ class Project < ApplicationRecord
     File.join(Babelfu.config.github_domain, remote_repository_id)
   end
 
+  def enqueue_fetch_config!
+    FetchProjectConfigJob.perform_later(self)
+  end
+
+  def config_fetched!
+    update!(setup_status: "config_fetched")
+  end
+
   def enqueue_sync_data!
     sync_in_progress!
     SyncProjectJob.perform_later(self)
@@ -117,5 +125,29 @@ class Project < ApplicationRecord
 
   def collaborator?(user)
     metadata.github_collaborators.any? { |c| c["login"] == user.github_username && c.dig("permissions", "push") }
+  end
+
+  def existing_recognized_repo
+    Project.find_by(slug: slug_for_repo)
+  end
+
+  def frontend_attrs
+    {
+      allow_remote_contributors:,
+      config_from_repo:,
+      default_branch_name:,
+      default_locale:,
+      name:,
+      public:,
+      recognized:,
+      repo_public:,
+      setup_status:,
+      slug:,
+      translations_path:,
+      use_config_from_repo:,
+      remote_repository_id:,
+      existing_recognized_repo:,
+      url:
+    }
   end
 end

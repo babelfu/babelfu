@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :projects do
     member do
       post :sync
+      get :configure
     end
 
     collection do

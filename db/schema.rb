@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_14_133416) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_26_135444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -130,6 +130,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_133416) do
     t.json "github_collaborators", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "repository", default: {}
     t.index ["project_id"], name: "index_metadata_projects_on_project_id"
   end
 
@@ -168,7 +169,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_133416) do
     t.boolean "public", default: false
     t.boolean "recognized", default: false, null: false
     t.boolean "allow_remote_contributors", default: false, null: false
-    t.boolean "config_from_repo", default: false, null: false
+    t.json "config_from_repo", default: {}
+    t.integer "setup_status", default: 0, null: false
+    t.boolean "use_config_from_repo", default: false, null: false
+    t.boolean "repo_public", default: false, null: false
     t.index ["slug"], name: "index_projects_on_slug", unique: true
   end
 

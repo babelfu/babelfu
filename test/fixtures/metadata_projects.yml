@@ -4,6 +4,7 @@
 #
 #  id                   :bigint           not null, primary key
 #  github_collaborators :json
+#  repository           :json
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  project_id           :bigint           not null
