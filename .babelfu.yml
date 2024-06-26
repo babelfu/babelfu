@@ -1,0 +1,2 @@
+default_locale: en
+translations_path: config/locales
