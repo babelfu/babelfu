@@ -48,7 +48,7 @@ class FetchTranslations
     content = get_source_file_content_for_ref(source_file_ref)
     return {} unless content
 
-    YAML.load(content)
+    YAML.safe_load(content)
   rescue Psych::SyntaxError
     {}
   end

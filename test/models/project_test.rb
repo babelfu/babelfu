@@ -5,21 +5,52 @@
 # Table name: projects
 #
 #  id                             :bigint           not null, primary key
+#  allow_remote_contributors      :boolean          default(FALSE), not null
+#  config_from_repo               :json
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
 #  github_access_token_expires_at :datetime
 #  name                           :string
+#  public                         :boolean          default(FALSE)
+#  recognized                     :boolean          default(FALSE), not null
+#  repo_public                    :boolean          default(FALSE), not null
+#  setup_status                   :integer          default("pending"), not null
+#  slug                           :string
 #  translations_path              :string
+#  use_config_from_repo           :boolean          default(FALSE), not null
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  installation_id                :string
 #  remote_repository_id           :string
 #
+# Indexes
+#
+#  index_projects_on_slug  (slug) UNIQUE
+#
 require "test_helper"
 
 class ProjectTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+
+  test "#collaborator?" do
+    project = projects(:one)
+
+    github_collaborators = [
+      { login: "user1", permissions: { "push" => true } },
+      { login: "user2", permissions: { "push" => false } }
+    ]
+
+    project.metadata.update!(github_collaborators: github_collaborators)
+
+    user1 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user1" }))
+    user2 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user2" }))
+    user3 = create(:user, metadata: MetadataUser.new(github_user: { "login" => "user3" }))
+
+    assert project.collaborator?(user1)
+    assert_not project.collaborator?(user2)
+    assert_not project.collaborator?(user3)
+  end
 
   test "#default_branch when the name exist but the branch doesn't" do
     project = Project.create(remote_repository_id: "user/repo", default_branch_name: "master")
@@ -89,10 +120,6 @@ class ProjectTest < ActiveSupport::TestCase
   test "#url" do
     project = Project.new(name: "Project 1", remote_repository_id: "user/repo")
     assert_equal "#{Babelfu.config.github_domain}/user/repo", project.url
-  end
-
-  test "#client" do
-    assert_instance_of ProjectClient, projects(:one).client
   end
 
   test "#enqueue_sync_data!" do

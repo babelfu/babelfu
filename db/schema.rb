@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_26_135444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -125,13 +125,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
-  create_table "metadata_users", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.json "github_repositories"
-    t.json "github_installations"
+  create_table "metadata_projects", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.json "github_collaborators", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.json "github_user"
+    t.json "repository", default: {}
+    t.index ["project_id"], name: "index_metadata_projects_on_project_id"
+  end
+
+  create_table "metadata_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.json "github_repositories", default: {}, null: false
+    t.json "github_installations", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.json "github_user", default: {}, null: false
     t.index ["user_id"], name: "index_metadata_users_on_user_id"
   end
 
@@ -156,6 +165,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.string "installation_id"
     t.string "github_access_token"
     t.datetime "github_access_token_expires_at"
+    t.string "slug"
+    t.boolean "public", default: false
+    t.boolean "recognized", default: false, null: false
+    t.boolean "allow_remote_contributors", default: false, null: false
+    t.json "config_from_repo", default: {}
+    t.integer "setup_status", default: 0, null: false
+    t.boolean "use_config_from_repo", default: false, null: false
+    t.boolean "repo_public", default: false, null: false
+    t.index ["slug"], name: "index_projects_on_slug", unique: true
   end
 
   create_table "proposals", force: :cascade do |t|
@@ -205,6 +223,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "branch_ref"
+    t.index ["project_id", "key", "locale", "branch_ref"], name: "idx_on_project_id_key_locale_branch_ref_c865b90c88", unique: true
     t.index ["project_id"], name: "index_translations_on_project_id"
   end
 
@@ -229,6 +248,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_28_215741) do
   add_foreign_key "commit_tasks", "projects"
   add_foreign_key "memberships", "projects"
   add_foreign_key "memberships", "users"
+  add_foreign_key "metadata_projects", "projects"
   add_foreign_key "metadata_users", "users"
   add_foreign_key "project_invitations", "projects"
   add_foreign_key "proposals", "projects"

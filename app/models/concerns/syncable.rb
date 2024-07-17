@@ -2,7 +2,6 @@
 
 module Syncable
   extend ActiveSupport::Concern
-  include LazyHasOne
 
   included do
     has_one :sync_state, as: :syncable, dependent: :delete

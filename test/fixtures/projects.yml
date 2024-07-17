@@ -3,16 +3,28 @@
 # Table name: projects
 #
 #  id                             :bigint           not null, primary key
+#  allow_remote_contributors      :boolean          default(FALSE), not null
+#  config_from_repo               :json
 #  default_branch_name            :string
 #  default_locale                 :string
 #  github_access_token            :string
 #  github_access_token_expires_at :datetime
 #  name                           :string
+#  public                         :boolean          default(FALSE)
+#  recognized                     :boolean          default(FALSE), not null
+#  repo_public                    :boolean          default(FALSE), not null
+#  setup_status                   :integer          default("pending"), not null
+#  slug                           :string
 #  translations_path              :string
+#  use_config_from_repo           :boolean          default(FALSE), not null
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  installation_id                :string
 #  remote_repository_id           :string
+#
+# Indexes
+#
+#  index_projects_on_slug  (slug) UNIQUE
 #
 
 one:
@@ -21,3 +33,4 @@ one:
   default_branch_name: master
   remote_repository_id: "babelfu/demo"
   translations_path: "config/locales"
+  slug: project1

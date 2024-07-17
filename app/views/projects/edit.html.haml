@@ -12,4 +12,6 @@
   = f.input :name
   = f.input :default_locale
   = f.input :translations_path, hint: "Path to the translations files", placeholder: "config/locales"
+  = f.input :public, as: :boolean, hint: "If the project is public, it will be visible to everyone"
+  = f.input :allow_remote_contributors, as: :boolean, hint: "Allow access to the project to any repository collaborator"
   = f.button :submit, class: "btn btn-primary"
