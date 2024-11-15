@@ -1,5 +1,12 @@
 # README
 
+## About the community version
+
+Consider that this version can be outdated compared to the [cloud version](https://babelfu.com) because of
+time constraints. 
+
+If you are interested in bringing some specific features from the cloud to the community, email me at info@babelfu.com.
+
 ## About Babelfu
 
 [Babelfu](https://babelfu.com) is a web service that manages translations for your projects.
